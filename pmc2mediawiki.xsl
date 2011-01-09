@@ -4,7 +4,7 @@
 
    pmc2mediawiki.xsl transforms PubMed Central's NLM Archiving and
    Interchange DTD 3.0 XML (NXML) [1] into plain text with MediaWiki
-   syntax [2]. It is derived from the jpub3-html.xsl file that can be
+   syntax [2]. It is derived from the jpub3-html.xsl [3] file that can be
    obtained from NCBI at
    ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
@@ -12,6 +12,7 @@
 
    [1] http://dtd.nlm.nih.gov/
    [2] http://www.mediawiki.org/wiki/Help:Formatting
+   [3] http://dtd.nlm.nih.gov/tools/tools.html
 
 -->
 
