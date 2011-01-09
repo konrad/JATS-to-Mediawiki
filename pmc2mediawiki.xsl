@@ -8,11 +8,11 @@
    obtained from NCBI at
    ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
-   Author: Konrad Foerstner <konrad@foerstner.org>
-
    [1] http://dtd.nlm.nih.gov/
    [2] http://www.mediawiki.org/wiki/Help:Formatting
    [3] http://dtd.nlm.nih.gov/tools/tools.html
+
+   Author: Konrad Foerstner <konrad@foerstner.org>
 
 -->
 
