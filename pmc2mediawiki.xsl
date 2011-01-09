@@ -8,9 +8,12 @@
    obtained from NCBI at
    ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
+   It is a part of the COASPedia project.
+
    [1] http://dtd.nlm.nih.gov/
    [2] http://www.mediawiki.org/wiki/Help:Formatting
    [3] http://dtd.nlm.nih.gov/tools/tools.html
+   [4] http://www.science3point0.com/coaspedia/index.php/Welcome
 
    Author: Konrad Foerstner <konrad@foerstner.org>
 
