@@ -1,4 +1,25 @@
 <?xml version="1.0"?>
+
+<!-- 
+
+   pmc2mediawiki.xsl transforms PubMed Central's NLM Archiving and
+   Interchange DTD 3.0 XML (NXML) [1] into plain text with MediaWiki
+   syntax [2]. It is derived from the jpub3-html.xsl file that can be
+   obtained from NCBI at
+   ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
+
+   Author: Konrad Foerstner <konrad@foerstner.org>
+
+   [1] http://dtd.nlm.nih.gov/
+   [2] http://www.mediawiki.org/wiki/Help:Formatting
+
+-->
+
+<!-- ============================================================= -->
+
+
+<!--                     ORIGINAL STATEMENT                        -->
+
 <!-- ============================================================= -->
 <!--  MODULE:    HTML Preview of Journal Publishing 3.0 XML        -->
 <!--  VERSION:   1.0                                               -->
