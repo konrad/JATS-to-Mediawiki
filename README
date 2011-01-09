@@ -1,4 +1,4 @@
-= ABOUT
+= About
 
 Transforms PubMed Central's NLM Archiving and Interchange DTD 3.0 XML
 (NXML) [1] into plain text with MediaWiki syntax [2].
@@ -6,22 +6,32 @@ Transforms PubMed Central's NLM Archiving and Interchange DTD 3.0 XML
 [1] http://dtd.nlm.nih.gov/
 [2] http://www.mediawiki.org/wiki/Help:Formatting
 
-= STATUS
-
-"Experimental" would be an euphemism. Currently not really usable.
-
-
-= EXAMPLE
+= Example
 
 * Get the file list:
   ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
-* Find publication file by the Pubmed ID e.g. 
-  $ grep 2566812 file_list.txt
-  1e/f3/PLoS_ONE-3-10-2566812.tar.gz	PLoS ONE. 2008 Oct 17; 3(10):e3229	PMC2566812
+* Find publication file by the PMC ID e.g. 
+  $ grep PMC2935419 file_list.txt
+  82/e8/Bioinformatics-26-18-2935419.tar.gz	Bioinformatics. 2010 Sep 15; 26(18):i540-i546	PMC2935419
 * append the this to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/ 
-  => ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/1e/f3/PLoS_ONE-3-10-2566812.tar.gz
+  => ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/82/e8/Bioinformatics-26-18-2935419.tar.gz
+  and download this file
+  $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/82/e8/Bioinformatics-26-18-2935419.tar.gz
 * Untar the file
-  $ tar xfz PLoS_ONE-3-10-2566812.tar.gz
+  $ tar xzf Bioinformatics-26-18-2935419.tar.gz
 * Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
-  $ xsltproc pcm2mediawiki.xsl PLoS\ ONE/3-10/pe3229-2566812/pone.0003229.nxml
-  
+  $ cd Bioinformatics/26-18/pi540-2935419/ \
+        && xsltproc ../../../pmc2mediawiki.xsl btq391.nxml > ../../../test.txt \
+        && cd ../../../
+* Copy the text into a MediaWiki page to render it into HTML
+
+= Status
+
+"Experimental" would be an euphemism. Currently not really usable.
+
+= Plan
+
+* We support only support the current version (3.0) of NLM Archiving
+  and Interchange DTD as there are existing tool that can convert
+  file in older version to the current one:
+  http://dtd.nlm.nih.gov/tools/tools.html
