@@ -53,10 +53,13 @@
     doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
     doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>-->
 
-
+  <!-- pcm2mediawiki
   <xsl:output doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
     doctype-system="http://www.w3.org/TR/html4/loose.dtd"
-    encoding="UTF-8"/>
+    encoding="UTF-8"/>-->
+
+  <!-- pcm2mediawiki -->
+  <xsl:output method="text"/>
  
   <xsl:strip-space elements="*"/>
 
@@ -94,7 +97,7 @@
               mml:mo mml:ms mml:mtext"/>
 
 
-  <xsl:param name="css" select="'jpub-preview.css'"/>
+  <xsl:param name="css" select="'pmc2mediawiki.css'"/>
 
 
   <!-- Keys -->
@@ -110,16 +113,15 @@
   <!--  ROOT TEMPLATE - HANDLES HTML FRAMEWORK                       -->
   <!-- ============================================================= -->
 
+  <!-- pcm2mediawiki
   <xsl:template match="/">
     <html>
-      <!-- HTML header -->
       <xsl:call-template name="make-html-header"/>
       <body>
         <xsl:apply-templates/>
       </body>
     </html>
   </xsl:template>
-
 
   <xsl:template name="make-html-header">
     <head>
@@ -133,10 +135,9 @@
           select="/article/front/article-meta/title-group/article-title[1]"/>
       </title>
       <link rel="stylesheet" type="text/css" href="{$css}"/>
-      <!-- XXX check: any other header stuff? XXX -->
     </head>
   </xsl:template>
-
+  -->
 
 <!-- ============================================================= -->
 <!--  TOP LEVEL                                                    -->
@@ -229,7 +230,7 @@
 				    -->
           <td>
             <h4 class="generated">
-              <xsl:text>Journal Information</xsl:text>
+              <xsl:text>=== Journal Information ===</xsl:text>
             </h4>
             <div class="metadata-group">
               <xsl:apply-templates mode="metadata"/>
@@ -302,7 +303,8 @@
 
           <td>
             <h4 class="generated">
-              <xsl:text>Article Information</xsl:text>
+              <xsl:text>=== Article Information ===</xsl:text>
+	      <xsl:text>&#xA;</xsl:text><!-- newline-->
             </h4>
             <div class="metadata-group">
 
@@ -391,7 +393,8 @@
                   <xsl:if test="not(normalize-space(title))">
                     <span class="generated">
                       <xsl:if test="self::trans-abstract">Translated </xsl:if>
-                      <xsl:text>Abstract</xsl:text>
+                      <xsl:text>=== Abstract ===</xsl:text>
+		      <xsl:text>&#xA;</xsl:text><!-- newline-->
                     </span>
                   </xsl:if>
                 </h4>
@@ -404,6 +407,7 @@
           <!-- end of abstract or trans-abstract -->
         </xsl:if>
         <!-- end of dealing with abstracts -->
+        <xsl:text>&#xA;</xsl:text><!-- newline-->
       </xsl:for-each>
       <xsl:for-each select="notes">
         <tr>
@@ -498,6 +502,7 @@
        journal-id+, journal-title-group*, issn+, isbn*, publisher?,
        notes? -->
 
+  <!-- pcm2mediawiki
   <xsl:template match="journal-id" mode="metadata">
     <xsl:call-template name="metadata-labeled-entry">
       <xsl:with-param name="label">
@@ -512,12 +517,25 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
+  -->
 
+  <!-- pcm2mediawiki  -->
+  <xsl:template match="journal-id" mode="metadata">
+    <xsl:call-template name="metadata-labeled-entry">
+      <xsl:with-param name="label">
+    <xsl:text>Journal ID</xsl:text>
+        <xsl:for-each select="@journal-id-type">
+          <xsl:text> (</xsl:text>
+            <xsl:value-of select="."/>
+          <xsl:text>)</xsl:text>
+        </xsl:for-each>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
 
   <xsl:template match="journal-title-group" mode="metadata">
     <xsl:apply-templates mode="metadata"/>
   </xsl:template>
-
 
   <xsl:template match="issn" mode="metadata">
     <xsl:call-template name="metadata-labeled-entry">
@@ -1253,10 +1271,11 @@
 
 
   <xsl:template match="title-group/article-title" mode="metadata">
-    <h1 class="document-title">
+    <xsl:text>== </xsl:text>
       <xsl:apply-templates/>
       <xsl:if test="../subtitle">:</xsl:if>
-    </h1>
+    <xsl:text> ==</xsl:text>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
 
 
@@ -1766,12 +1785,20 @@
 
 
   <xsl:template match="sec">
-    <div class="section">
-      <xsl:call-template name="named-anchor"/>
-      <xsl:apply-templates select="title"/>
-      <xsl:apply-templates select="sec-meta"/>
-      <xsl:apply-templates mode="drop-title"/>
-    </div>
+    <xsl:call-template name="named-anchor"/>
+    <xsl:apply-templates select="title"/>
+    <xsl:apply-templates select="sec-meta"/>
+    <xsl:apply-templates mode="drop-title"/>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
+  </xsl:template>
+
+
+  <xsl:template name="paragraphs" match="//p">
+    <xsl:param name="contents">
+      <xsl:apply-templates/>
+    </xsl:param>
+      <xsl:copy-of select="$contents"/>
+      <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
 
 
@@ -1791,7 +1818,20 @@
     </div>
   </xsl:template>
   
-  
+  <xsl:template match="ref-list" name="ref-list">
+      <xsl:call-template name="named-anchor"/>
+      <xsl:apply-templates select="." mode="label"/>
+      <xsl:apply-templates select="*[not(self::ref | self::ref-list)]"/>
+      <xsl:if test="ref">
+	<xsl:text>&#xA;{|&#xA;</xsl:text><!-- newline-->
+          <xsl:apply-templates select="ref"/>
+	<xsl:text>|}&#xA;</xsl:text><!-- newline-->
+      </xsl:if>
+      <xsl:apply-templates select="ref-list"/>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
+  </xsl:template>
+
+  <!-- pmc2mediawiki
   <xsl:template match="ref-list" name="ref-list">
     <div class="section ref-list">
       <xsl:call-template name="named-anchor"/>
@@ -1804,8 +1844,9 @@
       </xsl:if>
       <xsl:apply-templates select="ref-list"/>
     </div>
+    <xsl:text>&#xA;</xsl:text>
   </xsl:template>
-  
+  -->
   
   <xsl:template match="sec-meta">
    <div class="section-metadata">
@@ -1839,9 +1880,10 @@
     </xsl:param>
     <xsl:if test="normalize-space($contents)">
       <!-- coding defensively since empty titles make glitchy HTML -->
-      <h2 class="main-title">
-        <xsl:copy-of select="$contents"/>
-      </h2>
+      <xsl:text>=== </xsl:text>
+      <xsl:copy-of select="$contents"/>
+      <xsl:text> ===</xsl:text>
+      <xsl:text>&#xA;</xsl:text><!-- newline-->
     </xsl:if>
   </xsl:template>
 
@@ -1854,9 +1896,10 @@
     </xsl:param>   
     <xsl:if test="normalize-space($contents)">
       <!-- coding defensively since empty titles make glitchy HTML -->
-      <h3 class="section-title">
-        <xsl:copy-of select="$contents"/>
-      </h3>
+      <xsl:text>==== </xsl:text>
+      <xsl:copy-of select="$contents"/>
+      <xsl:text> ====</xsl:text>
+      <xsl:text>&#xA;</xsl:text><!-- newline-->
     </xsl:if>
   </xsl:template>
 
@@ -1869,9 +1912,10 @@
     </xsl:param>   
     <xsl:if test="normalize-space($contents)">
       <!-- coding defensively since empty titles make glitchy HTML -->
-      <h4 class="subsection-title">
-        <xsl:copy-of select="$contents"/>
-      </h4>
+      <xsl:text>===== </xsl:text>
+      <xsl:copy-of select="$contents"/>
+      <xsl:text> =====</xsl:text>
+      <xsl:text>&#xA;</xsl:text><!-- newline-->
     </xsl:if>
   </xsl:template>
 
@@ -2251,12 +2295,23 @@
 
 
   <xsl:template match="ref">
+    <xsl:text>|- &#xA;|</xsl:text>
+    <xsl:apply-templates select="." mode="label"/>
+            <xsl:call-template name="named-anchor"/> 
+	        <xsl:text>&#xA;|</xsl:text>
+          <xsl:apply-templates/>
+    <xsl:text>&#xA;</xsl:text>
+  </xsl:template>
+
+  <!-- pmc2mediawiki 
+  <xsl:template match="ref">
       <tr>
         <td class="ref-label">
           <p class="ref-label">
             <xsl:apply-templates select="." mode="label"/>
-            <xsl:text>&#xA0;</xsl:text>
+            <xsl:text>&#xA0;</xsl:text>-->
             <!-- space forces vertical alignment of the paragraph -->
+	      <!-- pmc2mediawiki 
             <xsl:call-template name="named-anchor"/>
           </p>
         </td>
@@ -2264,7 +2319,7 @@
           <xsl:apply-templates/>
         </td>
       </tr>
-  </xsl:template>
+  </xsl:template>-->
     
   
   <xsl:template match="ref/*" priority="0">
@@ -2642,13 +2697,11 @@
   	</xsl:choose>
   </xsl:template>
 
-
   <xsl:template match="xref">
     <a href="#{@rid}">
       <xsl:apply-templates/>
     </a>
   </xsl:template>
-
 
   
   <!-- ============================================================= -->
@@ -2656,17 +2709,24 @@
   <!-- ============================================================= -->
 
 
+  <!-- pcm2mediawiki
   <xsl:template match="bold">
     <b>
       <xsl:apply-templates/>
     </b>
   </xsl:template>
+  -->
 
+  <xsl:template match="bold">
+    <xsl:text>'''</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>'''</xsl:text>
+  </xsl:template>
 
   <xsl:template match="italic">
-    <i>
+    <xsl:text>''</xsl:text>
       <xsl:apply-templates/>
-    </i>
+    <xsl:text>''</xsl:text>
   </xsl:template>
 
 
@@ -2784,6 +2844,7 @@
     <xsl:call-template name="backmatter-section">
       <xsl:with-param name="generated-title">Acknowledgements</xsl:with-param>
     </xsl:call-template>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
   
 
@@ -2791,6 +2852,7 @@
     <xsl:call-template name="backmatter-section">
       <xsl:with-param name="generated-title">Appendices</xsl:with-param>
     </xsl:call-template>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
   
 
@@ -2798,6 +2860,7 @@
     <xsl:call-template name="backmatter-section">
       <xsl:with-param name="generated-title">Biography</xsl:with-param>
     </xsl:call-template>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
   
 
@@ -2829,6 +2892,7 @@
     <xsl:call-template name="backmatter-section">
       <xsl:with-param name="generated-title">Notes</xsl:with-param>
     </xsl:call-template>
+    <xsl:text>&#xA;</xsl:text><!-- newline-->
   </xsl:template>
   
 
@@ -3325,7 +3389,6 @@
     </xsl:for-each>
   </xsl:template>
 
-
   <xsl:template name="metadata-labeled-entry">
     <xsl:param name="label"/>
     <xsl:param name="contents">
@@ -3334,12 +3397,14 @@
     <xsl:call-template name="metadata-entry">
       <xsl:with-param name="contents">
         <xsl:if test="normalize-space($label)">
-          <span class="generated">
+	  <xsl:text>
+'''</xsl:text>
             <xsl:copy-of select="$label"/>
-            <xsl:text>: </xsl:text>
-          </span>
+            <xsl:text>:''' </xsl:text>
         </xsl:if>
         <xsl:copy-of select="$contents"/>
+            <xsl:text>
+</xsl:text>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
