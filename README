@@ -40,7 +40,6 @@ Author: Konrad Foerstner <konrad@foerstner.org>
 
 = Plan
 
-* We support only support the current version (3.0) of NLM Archiving
-  and Interchange DTD as there are existing tool that can convert
-  file in older version to the current one:
-  http://dtd.nlm.nih.gov/tools/tools.html
+* We supportthe current version (3.0) of NLM Archiving and Interchange
+  DTD as there are existing tool that can convert files in older
+  versions to the current one: http://dtd.nlm.nih.gov/tools/tools.html
