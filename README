@@ -1,17 +1,18 @@
 = About
 
-pmc2mediawiki.xsl transforms PubMed Central's NLM Archiving and
-Interchange DTD 3.0 XML (NXML) [1] into plain text with MediaWiki
-syntax [2]. It is derived from the jpub3-html.xsl [3] file that can be
+jats-to-mtediawiki.xsl transforms PubMed Central's NLM Archiving and
+Interchange DTD 3.0 XML (NXML) [1] / JATS into plain text with MediaWiki
+syntax [3]. It is derived from the jpub3-html.xsl [4] file that can be
 obtained from NCBI at
 ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
-It is a part of the COASPedia project.
+It is a part of the COASPedia project [5].
 
 [1] http://dtd.nlm.nih.gov/
-[2] http://www.mediawiki.org/wiki/Help:Formatting
-[3] http://dtd.nlm.nih.gov/tools/tools.html
-[4] http://www.science3point0.com/coaspedia/index.php/Welcome
+[2] http://jatspan.org/
+[3] http://www.mediawiki.org/wiki/Help:Formatting
+[4] http://dtd.nlm.nih.gov/tools/tools.html
+[5] http://www.science3point0.com/coaspedia/index.php/Welcome
 
 Author: Konrad Foerstner <konrad@foerstner.org>
 
@@ -30,7 +31,7 @@ Author: Konrad Foerstner <konrad@foerstner.org>
   $ tar xzf Bioinformatics-26-18-2935419.tar.gz
 * Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
   $ cd Bioinformatics/26-18/pi540-2935419/ \
-        && xsltproc ../../../pmc2mediawiki.xsl btq391.nxml > ../../../test.txt \
+        && xsltproc ../../../jats-to-mtediawiki.xsl btq391.nxml > ../../../test.txt \
         && cd ../../../
 * Copy the text into a MediaWiki page to render it into HTML
 
