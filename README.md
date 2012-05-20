@@ -1,8 +1,8 @@
-= About
+# About
 
 jats-to-mediawiki.xsl transforms XML files written in the NLM/NISO Journal
 Archiving Tag Suite (also called the NLM DTDs) [1] into MediaWiki
-syntax [3]. 
+XML [3]. 
 
 It is derived from the jpub3-html.xsl [4] file that can be
 obtained from NCBI at
@@ -12,13 +12,13 @@ It is a part of the COASPedia project [5].
 
     [1] http://dtd.nlm.nih.gov/
     [2] http://jatspan.org/
-    [3] http://www.mediawiki.org/wiki/Help:Formatting
+    [3] http://www.mediawiki.org/xml/export-0.6/
     [4] http://dtd.nlm.nih.gov/tools/tools.html
     [5] http://www.science3point0.com/coaspedia/index.php/Welcome
 
 Author: Konrad Foerstner <konrad@foerstner.org>
 
-= Example
+# Example
 
 * Get the file list:
   ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
@@ -37,17 +37,17 @@ Author: Konrad Foerstner <konrad@foerstner.org>
         && cd ../../../
 * Copy the text into a MediaWiki page to render it into HTML
 
-= Status
+# Status
 
 * Pre-alpha
 
-= Plan
+# Plan
 
 * We support the current version (3.0) of NLM Archiving and Interchange
   DTD as there are existing tool that can convert files in older
   versions to the current one: http://dtd.nlm.nih.gov/tools/tools.html
 
-= Contact / Collaborate
+# Contact / Collaborate
 
 Please join our Google Group jats-to-mediawiki, here:
 https://groups.google.com/forum/?fromgroups#!forum/jats-to-mediawiki
