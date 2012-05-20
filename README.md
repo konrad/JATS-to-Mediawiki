@@ -8,13 +8,15 @@ It is inspired by the jpub3-html.xsl [4] file that can be
 obtained from NCBI at
 ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
-It is a part of the COASPedia project [5].
+It is a part of the Encyclopedia of Original Research (EOR).
 
-* [1] http://dtd.nlm.nih.gov/
-* [2] http://jatspan.org/
-* [3] http://www.mediawiki.org/xml/export-0.6/
-* [4] http://dtd.nlm.nih.gov/tools/tools.html
-* [5] http://www.science3point0.com/coaspedia/index.php/Welcome
+[1] http://dtd.nlm.nih.gov/
+
+[2] http://jatspan.org/
+
+[3] http://www.mediawiki.org/xml/export-0.6/
+
+[4] http://dtd.nlm.nih.gov/tools/tools.html
 
 # Example
 
@@ -42,11 +44,6 @@ It is a part of the COASPedia project [5].
 
 See the [Initial Project Scope page](https://github.com/konrad/JATS-to-Mediawiki/wiki/Initial-Project-Scope)
 on the wiki.
-
-* We support the current version (3.0) of NLM Archiving and Interchange
-  DTD, as NLM provides a [tool that can convert
-  files](http://dtd.nlm.nih.gov/tools/tools.html)
-  in older versions into version 3.0.
 
 # Contact / Collaborate
 
