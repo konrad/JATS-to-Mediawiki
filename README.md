@@ -33,7 +33,7 @@ It is a part of the COASPedia project [5].
         # Untar the file
         $ tar xzf Bioinformatics-26-18-2935419.tar.gz
         
-	# Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
+        # Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
         $ cd Bioinformatics/26-18/pi540-2935419/ \
            && xsltproc ../../../jats-to-mtediawiki.xsl btq391.nxml > ../../../test.txt \
            && cd ../../../
@@ -45,6 +45,8 @@ It is a part of the COASPedia project [5].
 * Pre-alpha
 
 # Plan
+
+See https://github.com/konrad/JATS-to-Mediawiki/wiki/Initial-Project-Scope
 
 * We support the current version (3.0) of NLM Archiving and Interchange
   DTD as there are existing tool that can convert files in older
