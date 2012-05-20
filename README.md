@@ -1,22 +1,15 @@
 # About
 
-jats-to-mediawiki.xsl transforms XML files written in the NLM/NISO Journal
-Archiving Tag Suite (also called the NLM DTDs) [1, 2] into MediaWiki
-XML [3].
-
-It is inspired by the jpub3-html.xsl [4] file that can be
-obtained from NCBI at
-ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
-
-It is a part of the Encyclopedia of Original Research (EOR).
+jats-to-mediawiki.xsl transforms XML files written in the NLM/NISO
+Journal Archiving Tag Suite (also called the NLM DTDs) [1, 2] into
+MediaWiki XML [3]. It is a part of the Encyclopedia of Original
+Research (EOR).
 
 [1] http://dtd.nlm.nih.gov/
 
 [2] http://jatspan.org/
 
 [3] http://www.mediawiki.org/xml/export-0.6/
-
-[4] http://dtd.nlm.nih.gov/tools/tools.html
 
 # Example
 
@@ -34,7 +27,7 @@ It is a part of the Encyclopedia of Original Research (EOR).
 
     # Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
     $ cd PLoS_ONE_2006_Dec_27_1\(1\)_e133/ && \
-       xsltproc ../jats-to-mediawiki.xsl pone.0000133.nxml > test
+         xsltproc ../jats-to-mediawiki.xsl pone.0000133.nxml > mediawiki_import.xml
 
 # Status
 
