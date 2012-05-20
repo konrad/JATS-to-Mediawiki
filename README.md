@@ -19,23 +19,20 @@ It is a part of the COASPedia project [5].
 # Example
 
     # Get the file list:
-    ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
+    wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
 
     # Find publication file by the PMC ID e.g.
-    $ grep PMC2935419 file_list.txt
-    82/e8/Bioinformatics-26-18-2935419.tar.gz Bioinformatics. 2010 Sep 15; 26(18):i540-i546 PMC2935419
+    $ grep PMC3040697 file_list.txt 
+    32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz	BMC Med. 2011 Feb 17; 9:17	PMC3040697
 
     # Append the filename to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/
     # and download and unzip this file
-    $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/82/e8/Bioinformatics-26-18-2935419.tar.gz
-    $ tar xzf Bioinformatics-26-18-2935419.tar.gz
+    $ wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/aa/e1/PLoS_ONE_2006_Dec_27_1%281%29_e133.tar.gz
+    $ tar xzf PLoS_ONE_2006_Dec_27_1\(1\)_e133.tar.gz
 
     # Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
-    $ cd Bioinformatics/26-18/pi540-2935419/ \
-       && xsltproc ../../../jats-to-mtediawiki.xsl btq391.nxml > ../../../test.txt \
-       && cd ../../../
-
-    # Now Copy the text into a MediaWiki page to render it into HTML
+    $ cd PLoS_ONE_2006_Dec_27_1\(1\)_e133/ && \
+       xsltproc ../jats-to-mediawiki.xsl pone.0000133.nxml > test
 
 # Status
 
