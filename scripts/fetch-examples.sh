@@ -44,14 +44,14 @@ download_file(){
     cd ${SAMPLEDIR}
 
     echo Downloading $1:  $2
-    PMID=$1
+    PMCID=$1
     FTPDIR=$3
     FTPNAME=$4
     LOCALNAME=$5
     wget -c ${PMC_BASE_URL}${FTPDIR}${FTPNAME}.tar.gz \
-        --output-document=${PMID}.tar.gz
-    tar xzf ${PMID}.tar.gz
-    mv ${LOCALNAME} ${PMID}
+        --output-document=${PMCID}.tar.gz
+    tar xzf ${PMCID}.tar.gz
+    mv ${LOCALNAME} ${PMCID}
 }
 
 main
