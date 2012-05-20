@@ -1,26 +1,20 @@
 # About
 
 jats-to-mediawiki.xsl transforms XML files written in the NLM/NISO Journal
-Archiving Tag Suite (also called the NLM DTDs) [1] into MediaWiki
+Archiving Tag Suite (also called the NLM DTDs) [1, 2] into MediaWiki
 XML [3]. 
 
-It is derived from the jpub3-html.xsl [4] file that can be
+It is inspired by the jpub3-html.xsl [4] file that can be
 obtained from NCBI at
 ftp://ftp.ncbi.nih.gov/pub/archive_dtd/tools/jpub3-preview-xslt.zip
 
 It is a part of the COASPedia project [5].
 
-[1] http://dtd.nlm.nih.gov/
-
-[2] http://jatspan.org/
-
-[3] http://www.mediawiki.org/xml/export-0.6/
-
-[4] http://dtd.nlm.nih.gov/tools/tools.html
-
-[5] http://www.science3point0.com/coaspedia/index.php/Welcome
-
-Author: Konrad Foerstner <konrad@foerstner.org>
+* [1] http://dtd.nlm.nih.gov/
+* [2] http://jatspan.org/
+* [3] http://www.mediawiki.org/xml/export-0.6/
+* [4] http://dtd.nlm.nih.gov/tools/tools.html
+* [5] http://www.science3point0.com/coaspedia/index.php/Welcome
 
 # Example
 
@@ -38,12 +32,13 @@ Author: Konrad Foerstner <konrad@foerstner.org>
         
         # Untar the file
         $ tar xzf Bioinformatics-26-18-2935419.tar.gz
-        * Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
+        
+	# Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
         $ cd Bioinformatics/26-18/pi540-2935419/ \
            && xsltproc ../../../jats-to-mtediawiki.xsl btq391.nxml > ../../../test.txt \
            && cd ../../../
 
-	# Now Copy the text into a MediaWiki page to render it into HTML
+        # Now Copy the text into a MediaWiki page to render it into HTML
 
 # Status
 
@@ -60,3 +55,8 @@ Author: Konrad Foerstner <konrad@foerstner.org>
 Please join our Google Group jats-to-mediawiki, here:
 https://groups.google.com/forum/?fromgroups#!forum/jats-to-mediawiki
 
+# Authors:
+
+* Jeremy Morse
+* Chris Maloney
+* Konrad Foerstner <konrad@foerstner.org>
