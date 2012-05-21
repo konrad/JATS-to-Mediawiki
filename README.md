@@ -16,8 +16,8 @@ part of the Encyclopedia of Original Research (EOR).
     wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
 
     # Find publication file by the PMC ID e.g.
-    $ grep PMC3040697 file_list.txt 
-    32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz	BMC Med. 2011 Feb 17; 9:17	PMC3040697
+    $ grep PMC3040697 file_list.txt
+    32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz BMC Med. 2011 Feb 17; 9:17  PMC3040697
 
     # Append the filename to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/
     # and download and unzip this file
@@ -39,7 +39,7 @@ on the wiki.
 
 # Contact / Collaborate
 
-Please join our [Google Group jats-to-mediawiki](https://groups.google.com/forum/?fromgroups#!forum/jats-to-mediawiki)
+Please join our [Google Group jats-to-mediawiki](https://groups.google.com/d/forum/jats-to-mediawiki)
 
 # Authors:
 
