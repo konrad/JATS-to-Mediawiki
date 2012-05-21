@@ -1,9 +1,8 @@
 # About
 
 jats-to-mediawiki.xsl transforms XML files written in the NLM/NISO
-Journal Archiving Tag Suite (also called the NLM DTDs) [1, 2] into
-MediaWiki XML [3]. It is a part of the Encyclopedia of Original
-Research (EOR).
+Journal Archiving Tag Suite XML [1, 2] into MediaWiki XML [3]. It is a
+part of the Encyclopedia of Original Research (EOR).
 
 [1] http://dtd.nlm.nih.gov/
 
