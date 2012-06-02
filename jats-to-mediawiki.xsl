@@ -17,6 +17,7 @@
     
     
     <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
+    <xsl:strip-space elements="*"/>
     
     <!-- TODO: how to handle element:sub-article? -->
     <xsl:template match="/article">
@@ -81,21 +82,24 @@
     <!--    TODO: look into what this is    
             <xsl:apply-templates select="sig-block"/>
     -->    
-        
     </xsl:template>
     
     <xsl:template match="sec">
         <xsl:if test="title!=''">
-            <!-- newline for readability of output -->
-            <xsl:text>
-            </xsl:text>
-            <xsl:call-template name="CreateHeading"/>
+             <xsl:call-template name="CreateHeading"/>
         </xsl:if>
-  
         <!-- CONTINUE HERE-->
         <xsl:apply-templates/>
     </xsl:template>
-    
+
+    <xsl:template match="sec/p">
+        <!-- newline for legibility -->
+        <xsl:text>
+            
+</xsl:text>
+        <xsl:apply-templates/>
+    </xsl:template>
+
     
     <!-- *****WIKIMEDIA TAGGING***** -->
     
@@ -205,10 +209,18 @@
     <!-- ***HEADINGS*** -->
     <xsl:template name="CreateHeading">
         <!-- context is <sec> -->
+        <!-- newline for legibility -->
+        <xsl:text>
+            
+</xsl:text>
         <xsl:call-template name="CreateHeadingTag"/>
         <xsl:value-of select="title"/>
         <xsl:call-template name="CreateHeadingTag"/>
-    </xsl:template>
+        <!-- newline for legibility -->
+        <xsl:text>
+            
+</xsl:text>
+        </xsl:template>
     
     <!-- Determine depth of current sec to format wiki heading to same depth -->
     <xsl:template name="CreateHeadingTag">
