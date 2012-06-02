@@ -4,7 +4,10 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     version="1.0">
     
-    <!-- 2012-05-18: Supports NISO JATS 0.4 --> 
+    <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.6.xsd
+         For article content, targeting features listed on, or linked to from, http://www.mediawiki.org/wiki/Help:Formatting -->
+    
+    <!-- Input: 2012-05-18: Supports NISO JATS Archival and Interchange Tagset 0.4 --> 
     
     <!-- *****CONSTANTS: modify according to specific need***** -->
 
@@ -21,7 +24,6 @@
         <!-- Start MediaWiki document -->
         <xsl:element  name="mediawiki" namespace="http://www.mediawiki.org/xml/export-0.6/">
             <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.6/</xsl:attribute>
-<!--  cfm: removed:   <xsl:attribute name="xmlns:xsi">http://www.w3.org/2001/XMLSchema-instance</xsl:attribute> -->
             <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.6/ http://www.mediawiki.org/xml/export-0.6.xsd</xsl:attribute>
             <xsl:attribute name="version">0.6</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
@@ -84,16 +86,14 @@
     
     <xsl:template match="sec">
         <xsl:if test="title!=''">
-            <xsl:call-template name="CreateHeading"/>
             <!-- newline for readability of output -->
             <xsl:text>
-      
             </xsl:text>
+            <xsl:call-template name="CreateHeading"/>
         </xsl:if>
-        
-        
+  
         <!-- CONTINUE HERE-->
-        <xsl:apply-templates select="sec|p|list"/>
+        <xsl:apply-templates/>
     </xsl:template>
     
     
@@ -148,29 +148,60 @@
     </xsl:template>
     
     
-    <!-- ***LINKS*** -->    
-    <xsl:template match="ext-link">
-        <xsl:text>[[</xsl:text>
+    <!-- ***LINKS*** -->
+    <!-- Note on <email>: "If both a textual phrase (“the Moody Institute’s email address”) and a mailto URL are required, the <ext-link> element should be used."
+         (http://jats.nlm.nih.gov/archiving/tag-library/0.4/index.html?elem=email) -->
+    <xsl:template match="ext-link|uri|self-uri">
         <xsl:choose>
             <!-- test for internal link -->
             <xsl:when test="contains(@xlink:href, $wikiLinkBase1)">
+                <xsl:text>[[</xsl:text>
                 <xsl:value-of select="translate(substring-after(@xlink:href, $wikiLinkBase1), '_', ' ')"/>
                 <xsl:text>|</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="@xlink:title">
+                        <xsl:value-of select="@xlink:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>]]</xsl:text>
             </xsl:when>
             <xsl:when test="contains(@xlink:href, $wikiLinkBase2)">
+                <xsl:text>[[</xsl:text>
                 <xsl:value-of select="translate(substring-after(@xlink:href, $wikiLinkBase2), '_', ' ')"/>
                 <xsl:text>|</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="@xlink:title">
+                        <xsl:value-of select="@xlink:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>]]</xsl:text>
             </xsl:when>
             <xsl:otherwise> <!-- external link -->
+                <xsl:text>[</xsl:text>
                 <xsl:value-of select="@xlink:href"/>
                 <xsl:text> </xsl:text>
+                <xsl:choose>
+                    <xsl:when test="@xlink:title">
+                        <xsl:value-of select="@xlink:title"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <xsl:text>]</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:value-of select="."/>
-        <xsl:text>]]</xsl:text>
     </xsl:template>
     
-    
+    <!-- TODO: anchor links to section heads -->
+    <!-- TODO: "Internal link to an image or a file of other types" (http://www.mediawiki.org/wiki/Help:Links) -->
+        
     <!-- ***HEADINGS*** -->
     <xsl:template name="CreateHeading">
         <!-- context is <sec> -->
@@ -181,18 +212,21 @@
     
     <!-- Determine depth of current sec to format wiki heading to same depth -->
     <xsl:template name="CreateHeadingTag">
+        <xsl:text>=</xsl:text> <!-- Start at level 2 (level 1 is article title) -->
         <xsl:for-each select="ancestor-or-self::sec">
             <xsl:text>=</xsl:text>
         </xsl:for-each>
     </xsl:template>
     
+    <!-- Avoid redundant sec titles -->
+    <xsl:template match="sec/title"/>
 
     <!-- ***LISTS*** -->
     <!-- Note: no support for <label> (JATS 0.4) -->
     <xsl:template match="list">
             <xsl:apply-templates select="label"/>
             <xsl:apply-templates select="title"/>
-        <!-- TODO: fix whitespace / newlines in list output -->
+        <!-- ": fix whitespace / newlines in list output -->
         <xsl:for-each select="list-item">
             <xsl:choose>
                 <xsl:when test="parent::list/@list-type='bullet|simple'">
@@ -233,7 +267,78 @@
     
     
     <!-- ***FILES*** -->    
-
+    <!-- Bypass (optional) wrapper elements so we can get to the actionable bits inside. -->
+    <xsl:template match="fig|fig-group">
+        <xsl:apply-templates select="fig|graphic"/>
+    </xsl:template>
+    
+    
+    <xsl:template match="graphic|inline-graphic|media">
+        <!-- target output is [[File:filename.extension|options|caption]] -->
+        <xsl:text>[[File:</xsl:text>
+        <xsl:value-of select="@xlink:href"/>
+     
+        <!-- format option -->
+        <xsl:choose>
+            <xsl:when test="position='anchor'">
+                <xsl:text>|frame</xsl:text>
+            </xsl:when>
+            <xsl:when test="name()='inline-graphic'">
+                <xsl:text>|frameless</xsl:text>
+            </xsl:when>
+            <xsl:otherwise> <!-- in JATS 0.4, default value of position is 'float' -->
+                <xsl:text>|thumb</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        
+        <!-- Vertical alignment -->
+        <!-- Note: no values are prescribed.  Tests are for values suggested in the JATS 0.4 Tag Library. -->
+        <xsl:choose>
+            <xsl:when test="@baseline-shift='baseline'">
+                <xsl:text>|baseline</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='sub'">
+                <xsl:text>|sub</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='sup'">
+                <xsl:text>|super</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='top'">
+                <xsl:text>|top</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='text-top'">
+                <xsl:text>|text-top</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='middle'">
+                <xsl:text>|middle</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='bottom'">
+                <xsl:text>|bottom</xsl:text>
+            </xsl:when>
+            <xsl:when test="@baseline-shift='text-bottom'">
+                <xsl:text>|text-bottom</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+        
+        
+        
+        <!-- caption: use closest-proximity caption -->
+        <xsl:choose>
+            <xsl:when test="caption">
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates select="caption"/>
+            </xsl:when>
+            <xsl:when test="ancestor::fig/caption">
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates select="ancestor::fig/caption"/>
+            </xsl:when>
+            <xsl:when test="ancestor::fig-group/caption">
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates select="ancestor::fig-group/caption"/>
+            </xsl:when>            
+        </xsl:choose>
+        <xsl:text>]]</xsl:text>
+    </xsl:template>
 
 
     <!-- ***TABLES*** -->
