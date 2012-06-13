@@ -19,6 +19,11 @@
     <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
     <xsl:strip-space elements="*"/>
     
+    
+    <!-- match and drop any elements intended for print only -->   
+    <xsl:template match="*[@specific-use='print-only']"/>
+    
+    
     <!-- TODO: how to handle element:sub-article? -->
     <xsl:template match="/article">
         
