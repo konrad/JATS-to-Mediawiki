@@ -92,14 +92,12 @@
         <xsl:if test="title!=''">
              <xsl:call-template name="CreateHeading"/>
         </xsl:if>
-        <!-- CONTINUE HERE-->
         <xsl:apply-templates/>
     </xsl:template>
 
     <xsl:template match="sec/p">
         <!-- newline for legibility -->
         <xsl:text>
-            
 </xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
@@ -229,7 +227,7 @@
     <!-- Determine depth of current sec to format wiki heading to same depth -->
     <xsl:template name="CreateHeadingTag">
         <xsl:text>=</xsl:text> <!-- Start at level 2 (level 1 is article title) -->
-        <xsl:for-each select="ancestor-or-self::sec">
+        <xsl:for-each select="ancestor-or-self::sec|ancestor-or-self::label[parent::table-wrap]">
             <xsl:text>=</xsl:text>
         </xsl:for-each>
     </xsl:template>
@@ -357,13 +355,93 @@
     </xsl:template>
 
 
-    <!-- ***TABLES*** -->
-    <xsl:template match="def-list[term-head|def-head]">
-        <!-- treat as a 2-column table -->
+    <!-- The following is cribbed from jpub3-html.xsl v1.0, a module of the JATS Journal Publishing 3.0 Preview Stylesheets. -->
+    <!-- ============================================================= -->
+    <!--  TABLES                                                       -->
+    <!-- ============================================================= -->
+    <!--  Tables are already in XHTML, and can simply be copied
+        through                                                      -->
+    
+    
+    <xsl:template match="table | thead | tbody | tfoot |
+        col | colgroup | tr | th | td">
+        <xsl:copy>
+            <xsl:apply-templates select="@*" mode="table-copy"/>
+            <xsl:apply-templates/>
+        </xsl:copy>
     </xsl:template>
+    
+    
+    <xsl:template match="array/tbody">
+        <table>
+            <xsl:copy>
+                <xsl:apply-templates select="@*" mode="table-copy"/>
+                <xsl:apply-templates/>
+            </xsl:copy>
+        </table>
+    </xsl:template>
+    
+    
+    <xsl:template match="@*" mode="table-copy">
+        <xsl:copy-of select="."/>
+    </xsl:template>
+    
+    
+    <xsl:template match="@content-type" mode="table-copy"/>
+    <!-- end excerpt from jpub3-html.xsl v1.0, a module of the JATS Journal Publishing 3.0 Preview Stylesheets. -->
 
+
+
+    <!-- ***MORE TABLES*** -->
+    <!-- handle elements within table-wrap -->
+    <xsl:template match="table-wrap">
+        <xsl:if test="label">
+            <!-- create section heading for table itself, at the level of the parent <sec> +1 -->
+            <!-- newline-->
+            <xsl:text>
+</xsl:text>
+            <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
+            <xsl:apply-templates select="label" mode="table-wrap"/>
+            <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
+        </xsl:if>
+        
+        <!-- TODO: is there a better way to format this? -->
+        <xsl:if test="caption|object-id">
+            <!-- newline-->
+            <xsl:text>
+</xsl:text>
+            <xsl:text>:"</xsl:text>
+            <xsl:apply-templates select="caption" mode="table-wrap"/>
+            <xsl:apply-templates select="object-id" mode="table-wrap"/>
+            <xsl:text>"</xsl:text>
+        </xsl:if>
+        <xsl:apply-templates/>
+    </xsl:template>
+    
+    <!-- overridden by mode="table-wrap" templates -->
+    <xsl:template match="table-wrap/label|table-wrap/caption|table-wrap/object-id"/>
+    
+    <xsl:template match="label|caption" mode="table-wrap">
+        <xsl:apply-templates/>
+    </xsl:template>
+    
+    <xsl:template match="object-id" mode="table-wrap">
+        <xsl:text>(</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>)</xsl:text>
+    </xsl:template>
+    
+    
+    <!-- Additional formatting to handle lists that should be treated as a 2-column table -->
+    <xsl:template match="def-list[term-head|def-head]">
+    
+    </xsl:template>
+    
     
 
+    
+    <!-- ***FOOTNOTES & REFERENCES*** -->
+    <!-- TODO! -->
 
 
 </xsl:stylesheet>
