@@ -363,12 +363,24 @@
         through                                                      -->
     
     
-    <xsl:template match="table | thead | tbody | tfoot |
-        col | colgroup | tr | th | td">
+    <xsl:template match="table | tr | th | td">
         <xsl:copy>
             <xsl:apply-templates select="@*" mode="table-copy"/>
+            <xsl:if test="name()='table'">
+                <xsl:if test="not(@border)">
+                    <xsl:attribute name="border">1</xsl:attribute>
+                </xsl:if>
+            </xsl:if>
             <xsl:apply-templates/>
         </xsl:copy>
+    </xsl:template>
+    
+    <!-- not supported in WikiMedia; any formatting included here is lost -->
+    <xsl:template match="col | colgroup"/>
+    
+    <!-- not supported in WikiMedia but children are, so pass through -->
+    <xsl:template match="thead | tbody | tfoot">
+        <xsl:apply-templates/>
     </xsl:template>
     
     
@@ -442,6 +454,7 @@
     
     <!-- ***FOOTNOTES & REFERENCES*** -->
     <!-- TODO! -->
+    <!-- include table-wrap-foot -->
 
 
 </xsl:stylesheet>
