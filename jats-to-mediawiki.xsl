@@ -3,7 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     version="1.0">
-    
+
+    <xsl:import href="lib/serialize.xsl"/>
+  
     <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.6.xsd
          For article content, targeting features listed on, or linked to from, http://www.mediawiki.org/wiki/Help:Formatting -->
     
@@ -96,8 +98,11 @@
     </xsl:template>
 
     <xsl:template match="sec/p">
-        <!-- newline for legibility -->
+        <!-- newline for legibility
+          [CFM] Also, need an extra newline between paragraphs in wiki markup.          
+        -->
         <xsl:text>
+
 </xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
@@ -359,11 +364,16 @@
     <!-- ============================================================= -->
     <!--  TABLES                                                       -->
     <!-- ============================================================= -->
-    <!--  Tables are already in XHTML, and can simply be copied
-        through                                                      -->
-    
+    <!--  
+      Tables are already in XHTML, and can simply be copied
+      through.
+      [CFM]  Actually, it looks like tables need to be copied into the output
+      as escaped markup.  See github issue #6.
+    -->
     
     <xsl:template match="table | tr | th | td">
+        <xsl:apply-templates select='.' mode='serialize'/>
+      <!--
         <xsl:copy>
             <xsl:apply-templates select="@*" mode="table-copy"/>
             <xsl:if test="name()='table'">
@@ -373,8 +383,9 @@
             </xsl:if>
             <xsl:apply-templates/>
         </xsl:copy>
+      -->
     </xsl:template>
-    
+  
     <!-- not supported in WikiMedia; any formatting included here is lost -->
     <xsl:template match="col | colgroup"/>
     
