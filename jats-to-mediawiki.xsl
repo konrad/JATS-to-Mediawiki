@@ -15,7 +15,10 @@
     <xsl:variable name="wikiLinkBase1">wikipedia.org/w/index.php?title=</xsl:variable>
     <xsl:variable name="wikiLinkBase2">wikipedia.org/wiki</xsl:variable>
     
-    
+    <!-- Default border for all tables -->
+    <xsl:variable name="tableBorder">1</xsl:variable>
+
+
     <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
     <xsl:strip-space elements="*"/>
     
@@ -368,7 +371,9 @@
             <xsl:apply-templates select="@*" mode="table-copy"/>
             <xsl:if test="name()='table'">
                 <xsl:if test="not(@border)">
-                    <xsl:attribute name="border">1</xsl:attribute>
+                    <xsl:attribute name="border">
+                        <xsl:value-of select="$tableBorder"/>
+                    </xsl:attribute>
                 </xsl:if>
             </xsl:if>
             <xsl:apply-templates/>
