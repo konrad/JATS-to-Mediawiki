@@ -5,7 +5,7 @@
      http://www.biglist.com/lists/lists.mulberrytech.com/xsl-list/archives/201008/msg00186.html
      and downloaded from http://stamm-wilbrandt.de/en/xsl-list/serialize/serialize.xsl.
      
-     [CFM] Changes for JATS-To-Mediawiki:
+     [CFM] JATS-To-Mediawiki notes:
        - Removed stuff not used, doOutput template, namespaces, comments, pi's, etc.
        - Changed mode name from "output" to "serialize".
        - Change the recursion mechanism.  Now, it doesn't recurse with the mode 'serialize';
