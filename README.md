@@ -10,23 +10,29 @@ part of the Encyclopedia of Original Research (EOR).
 
 [3] http://www.mediawiki.org/xml/export-0.6/
 
-# Example
+# Example (bash shell)
+    # Set and env. variable to point to the JATS-To-Mediawiki home,
+    # wherever it is that you've put the code.
+    $ export JTM_HOME=/~/JATS-To-Mediawiki
 
-    # Get the file list:
-    wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
+    # Get the open-access file list from PMC
+    $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
 
-    # Find publication file by the PMC ID e.g.
+    # Find a specific publication file by the PMC ID.
     $ grep PMC3040697 file_list.txt
     32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz BMC Med. 2011 Feb 17; 9:17  PMC3040697
 
     # Append the filename to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/
     # and download and unzip this file
-    $ wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/aa/e1/PLoS_ONE_2006_Dec_27_1%281%29_e133.tar.gz
-    $ tar xzf PLoS_ONE_2006_Dec_27_1\(1\)_e133.tar.gz
+    $ wget -c wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz
+    $ tar xzvf BMC_Med_2011_Feb_17_9_17.tar.gz
 
-    # Use a XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file
-    $ cd PLoS_ONE_2006_Dec_27_1\(1\)_e133/ && \
-         xsltproc ../jats-to-mediawiki.xsl pone.0000133.nxml > mediawiki_import.xml
+    # Use an XSLT processor (e.g. xsltproc) to apply the XSL file to the NXML file.
+    $ cd BMC_Med_2011_Feb_17_9_17 && \
+         xsltproc $JTM_HOME/jats-to-mediawiki.xsl 1741-7015-9-17.nxml > 1741-7015-9-17.mw.xml
+
+    # In a browser, go to the import page of your target mediawiki installation, and import it
+    # For example, http://chrisbaloney.com/wiki/index.php/Special:Import
 
 # Status
 
