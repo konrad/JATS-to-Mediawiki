@@ -6,9 +6,13 @@ part of the Encyclopedia of Original Research (EOR) [4], and we expect
 it to be tightly integrated with the open-access-media-importer [5].
 
 [1] http://dtd.nlm.nih.gov/
+
 [2] http://jatspan.org/
+
 [3] http://www.mediawiki.org/xml/export-0.6/
+
 [4] http://en.wikiversity.org/wiki/User:OpenScientist/Open_grant_writing_-_Encyclopaedia_of_original_research
+
 [5] http://en.wikiversity.org/wiki/User:OpenScientist/Open_grant_writing/Wissenswert_2011/Documentation
 
 # Example (bash):
