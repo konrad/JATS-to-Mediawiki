@@ -534,6 +534,7 @@
                     <xsl:value-of select="$refID"/>  
                 </xsl:attribute>
                 <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
+                
             </xsl:element>
             <xsl:text> <!-- newline -->
 </xsl:text>
@@ -543,6 +544,7 @@
     <!-- Using Template:Citation ( http://en.wikipedia.org/wiki/Template:Citation ) -->
     <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
         <xsl:text>{{Citation </xsl:text>
+        <!-- TODO: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
         <xsl:for-each select="string-name|person-group/string-name">
             <xsl:text>| author</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
             <xsl:apply-templates/>
@@ -557,7 +559,48 @@
             <xsl:text>
 </xsl:text> 
         </xsl:for-each>
-
+        <xsl:for-each select="descendant::collab">
+            <xsl:text>| coauthors = </xsl:text>
+            <xsl:value-of select="."/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:for-each>
+        <!-- PUBLICATION DATES : be careful not to get other dates that can appear in citations, which use same tags-->
+        <xsl:if test="year|date/year">
+            <xsl:text>| year = </xsl:text>
+            <xsl:value-of select="year|date/year"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="month|date/month">
+            <xsl:text>| month = </xsl:text>
+            <xsl:value-of select="month|date/month"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="string-date">
+            <xsl:text>| date = </xsl:text>
+            <xsl:value-of select="string-date"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <!-- OTHER DATES -->
+        <xsl:for-each select="date-in-citation[contains(@content-type, 'access')|contains(@content-type, 'stamp')]|access-date|time-stamp">
+            <xsl:text>| accessdate = </xsl:text>
+            <xsl:value-of select="."/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:for-each>
+        <xsl:for-each select="date-in-citation[contains(@content-type, 'copyright')]">
+            <xsl:text>| origyear = </xsl:text>
+            <xsl:value-of select="."/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:for-each>
+        
+        
+        
+        
         <!-- close citations block -->
         <xsl:text>
 }}
