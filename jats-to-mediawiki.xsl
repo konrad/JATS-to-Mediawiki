@@ -7,7 +7,7 @@
     <xsl:import href="lib/serialize.xsl"/>
   
     <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.6.xsd
-         For article content, targeting features listed on, or linked to from, http://www.mediawiki.org/wiki/Help:Formatting -->
+         For article content, targeting features listed on, or linked to from, x -->
     
     <!-- Input: 2012-05-18: Supports NISO JATS Archival and Interchange Tagset 0.4 --> 
     
@@ -470,8 +470,107 @@
     
     <!-- ***FOOTNOTES & REFERENCES*** -->
     <!-- TODO! -->
-    <!-- include table-wrap-foot -->
+    
+    <!-- Using Wikipedia List-defined references (see: http://en.wikipedia.org/wiki/Help:List-defined_references ) to reflect JATS/NLM document structure -->
+    <!-- The ref to the footnote -->
+    <xsl:template match="xref">
+        <xsl:variable name="rid">
+            <xsl:value-of select="@rid"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="//ref[@id=$rid]">
+                <xsl:element name="ref">
+                    <xsl:attribute name="name">
+                        <xsl:value-of select="$rid"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates/>
+                </xsl:element>
+            </xsl:when>
+            <!-- No matching ID to link to, so don't build link. -->
+            <xsl:otherwise>
+                <xsl:apply-templates/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
+    <!-- The footnotes themselves -->
+    <xsl:template match="ref-list">
+        <!-- header tag -->
+        <xsl:text>
+== </xsl:text>
+        <xsl:choose>
+            <xsl:when test="title!=''">
+                <xsl:value-of select="title"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>References</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:text> ==
+</xsl:text>
+        <xsl:element name="references">
+            <xsl:apply-templates/>
+        </xsl:element>
+    </xsl:template>
+    
+    <xsl:template match="ref">
+        <xsl:variable name="refID">
+            <xsl:choose>
+                <xsl:when test="@id!=''">
+                    <xsl:value-of select="@id"/>
+                </xsl:when>
+                <!-- Best practice dictates <ref> will have @id, but the DTD permits the @id to be on the child citation as well.  DTD also permits more than one citation per <ref>.  
+                    Since we need an id to point to, grab the @id from the first child element of <ref> that isn't <label> or <x>. -->  
+                <xsl:otherwise>
+                    <xsl:value-of select="child::*[not(name(label|x))][1]/@id"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!-- QUESTION: better to let the error display, or suppress and fail quietly? -->
+        <!-- Test that there's a link to this footnote; if not, Wiki will display an error, so don't bother. -->
+        <xsl:if test="//xref[@rid=$refID]">
+            <xsl:element name="ref">
+                <xsl:attribute name="name">
+                    <xsl:value-of select="$refID"/>  
+                </xsl:attribute>
+                <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
+            </xsl:element>
+            <xsl:text> <!-- newline -->
+</xsl:text>
+        </xsl:if>   
+    </xsl:template>
+    
+    <!-- Using Template:Citation ( http://en.wikipedia.org/wiki/Template:Citation ) -->
+    <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
+        <xsl:text>{{Citation </xsl:text>
+        <xsl:for-each select="string-name|person-group/string-name">
+            <xsl:text>| author</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
+            <xsl:apply-templates/>
+        </xsl:for-each>
+        <xsl:for-each select="name|person-group/name">
+            <xsl:text>| last</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
+            <xsl:value-of select="surname"/>
+            <xsl:text>
+</xsl:text>
+            <xsl:text>| first</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
+            <xsl:value-of select="given-names"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:for-each>
+
+        <!-- close citations block -->
+        <xsl:text>
+}}
+</xsl:text>
+    </xsl:template>
+
+    
+    
+    
+    <!-- TODO: include table-wrap-foot -->
+
+
+    <!-- TODO: Notes section -->
 
 </xsl:stylesheet>
 
