@@ -597,10 +597,151 @@
             <xsl:text>
 </xsl:text> 
         </xsl:for-each>
+        <!-- TITLE -->
+        <xsl:choose>
+            <!-- ARTICLE -->
+            <xsl:when test="article-title">
+                <xsl:text>| title = </xsl:text>
+                <xsl:apply-templates select="article-title"/>
+                <xsl:text>
+</xsl:text>
+                <xsl:if test="source">
+                    <xsl:text>| work = </xsl:text>
+                    <xsl:apply-templates select="source"/>
+                    <xsl:text>
+</xsl:text> 
+                </xsl:if>
+                <xsl:if test="trans-title">
+                    <xsl:text>| trans_title = </xsl:text>
+                    <xsl:apply-templates select="trans-title"/>
+                    <xsl:text>
+</xsl:text> 
+                </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:if test="source">
+                    <xsl:text>| title = </xsl:text>
+                    <xsl:apply-templates select="source"/>
+                    <xsl:text>
+</xsl:text> 
+                </xsl:if>
+                <xsl:if test="trans-source">
+                    <xsl:text>| trans_title = </xsl:text>
+                    <xsl:apply-templates select="trans-title"/>
+                    <xsl:text>
+</xsl:text> 
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:if test="chapter-title">
+            <xsl:text>| chapter = </xsl:text>
+            <xsl:apply-templates select="chapter"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        
+        <!-- ISSUE -->
+        <xsl:if test="issue">
+            <xsl:text>| issue = </xsl:text>
+            <xsl:apply-templates select="issue"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="volume">
+            <xsl:text>| volume = </xsl:text>
+            <xsl:apply-templates select="volume"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="publisher-name">
+            <xsl:text>| publisher = </xsl:text>
+            <xsl:apply-templates select="publisher-name"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="publisher-loc">
+            <xsl:text>| location = </xsl:text>
+            <xsl:apply-templates select="publisher-loc"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>        
+        <xsl:if test="series">
+            <xsl:text>| series = </xsl:text>
+            <xsl:apply-templates select="series"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        <xsl:if test="edition">
+            <xsl:text>| edition = </xsl:text>
+            <xsl:apply-templates select="edition"/>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        
+        <!-- LANGUAGES -->
+        <xsl:if test="article-title[@xml:lang!='']|chapter-title[@xml:lang!='']|source[@xml:lang!='']">
+            <xsl:text>| language = </xsl:text>
+            <xsl:choose>
+                <xsl:when test="article-title[@xml:lang!='']">
+                    <xsl:value-of select="article-title/@xml:lang!=''"/>
+                </xsl:when>
+                <xsl:when test="chapter-title[@xml:lang!='']">
+                    <xsl:value-of select="chapter-title/@xml:lang!=''"/>
+                </xsl:when>
+                <xsl:when test="source[@xml:lang!='']">
+                    <xsl:value-of select="source/@xml:lang!=''"/>
+                </xsl:when>
+            </xsl:choose>
+            <xsl:text>
+</xsl:text> 
+        </xsl:if>
+        
+        <!-- PAGES -->
+        <xsl:choose>
+            <xsl:when test="page-range">
+                <xsl:text>| pages = </xsl:text>
+                <xsl:apply-templates select="page-range"/>
+                <xsl:text>
+</xsl:text>                
+            </xsl:when>
+            <xsl:when test="fpage and lpage">
+                <xsl:text>| pages = </xsl:text>
+                <xsl:value-of select="fpage"/><xsl:text>–</xsl:text><xsl:value-of select="lpage"/>
+                <xsl:text>
+</xsl:text>
+            </xsl:when>                
+            <xsl:when test="fpage and not(lpage)">
+                <xsl:text>| page = </xsl:text>
+                <xsl:apply-templates select="fpage"/>
+                <xsl:text>
+</xsl:text>
+            </xsl:when>
+            <xsl:when test="elocation-id">
+                <xsl:text>| at = </xsl:text>
+                <xsl:apply-templates select="elocation-id"/>
+                <xsl:text>
+</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+
+        <!-- IDENTIFIERS -->
+        <xsl:if test="issn">
+            <xsl:text>| issn = </xsl:text>
+            <xsl:apply-templates select="issn"/>
+            <xsl:text>
+</xsl:text>            
+        </xsl:if>
+        <xsl:if test="isbn">
+            <xsl:text>| isbn = </xsl:text>
+            <xsl:apply-templates select="isbn"/>
+            <xsl:text>
+</xsl:text>            
+        </xsl:if>
         
         
-        
-        
+        <!-- UNFORMATTED CITATION BITS -->
+        <xsl:apply-templates select="comment"/>
+
         <!-- close citations block -->
         <xsl:text>
 }}
