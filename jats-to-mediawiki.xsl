@@ -541,7 +541,10 @@
         </xsl:if>   
     </xsl:template>
     
-    <!-- Using Template:Citation ( http://en.wikipedia.org/wiki/Template:Citation ) -->
+    <!-- Using Template:Citation ( http://en.wikipedia.org/wiki/Template:Citation )
+            which chooses formatting based on which field are populated; more reliable than attempting
+            to parse JATS/NLM attributes such as @publication-type or @citation-type, since any text value is permitted
+            in those attributes. -->
     <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
         <xsl:text>{{Citation </xsl:text>
         <!-- TODO: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
@@ -724,6 +727,29 @@
             </xsl:when>
         </xsl:choose>
 
+        <!-- URIs -->
+        <xsl:choose>
+            <xsl:when test="@xlink:href">
+                <xsl:text>| url = </xsl:text>
+                <xsl:apply-templates select="@xlink:href"/>
+                <xsl:text>
+</xsl:text>            
+            </xsl:when>
+            <!-- Avoid redundancy with specific ID fields below-->
+            <xsl:when test="ext-link[not(@ext-link-type='doi'|@ext-link-type='pmcid'|@ext-link-type='pmid')]">
+                <xsl:text>| url = </xsl:text>
+                <xsl:apply-templates select="ext-link"/>
+                <xsl:text>
+</xsl:text>     
+            </xsl:when>
+            <xsl:when test="uri">
+                <xsl:text>| url = </xsl:text>
+                <xsl:apply-templates select="uri"/>
+                <xsl:text>
+</xsl:text>
+            </xsl:when>
+        </xsl:choose>
+        
         <!-- IDENTIFIERS -->
         <xsl:if test="issn">
             <xsl:text>| issn = </xsl:text>
@@ -737,10 +763,79 @@
             <xsl:text>
 </xsl:text>            
         </xsl:if>
+        <xsl:choose>
+            <xsl:when test="pub-id[@pub-id-type='doi']">
+                <xsl:text>| doi = </xsl:text>
+                <xsl:apply-templates select="pub-id[@pub-id-type='doi']"/>
+                <xsl:text>
+</xsl:text>            
+                
+            </xsl:when>
+            <xsl:when test="ext-link[@ext-link-type='doi']">
+                <xsl:text>| doi = </xsl:text>
+                <xsl:apply-templates select="ext-link[@ext-link-type='doi']"/>
+                <xsl:text>
+</xsl:text>            
+            </xsl:when>
+        </xsl:choose>
         
+        <xsl:choose>
+            <xsl:when test="pub-id[@pub-id-type='pmcid']">
+                <xsl:text>| pmc = </xsl:text>
+                <xsl:apply-templates select="pub-id[@pub-id-type='pmcid']"/>
+                <xsl:text>
+</xsl:text>     
+            </xsl:when>
+            <xsl:when test="ext-link[@ext-link-type='pmcid']">
+                <xsl:text>| pmc = </xsl:text>
+                <xsl:apply-templates select="ext-link[@ext-link-type='pmcid']"/>
+                <xsl:text>
+</xsl:text>            
+            </xsl:when>
+        </xsl:choose>
         
-        <!-- UNFORMATTED CITATION BITS -->
-        <xsl:apply-templates select="comment"/>
+        <xsl:choose>
+            <xsl:when test="pub-id[@pub-id-type='pmid']">
+                <xsl:text>| pmid = </xsl:text>
+                <xsl:apply-templates select="pub-id[@pub-id-type='pmid']"/>
+                <xsl:text>
+</xsl:text>     
+            </xsl:when>
+            <xsl:when test="ext-link[@ext-link-type='pmid']">
+                <xsl:text>| pmid = </xsl:text>
+                <xsl:apply-templates select="ext-link[@ext-link-type='pmid']"/>
+                <xsl:text>
+</xsl:text>            
+            </xsl:when>
+        </xsl:choose>
+        
+        <!-- default catch-all id -->
+        <xsl:if test="pub-id[not(@pub-id-type='doi'|@pub-id-type='pmcid'|@pub-id-type='pmid')]">
+            <xsl:text>| id = </xsl:text>
+            <xsl:apply-templates select="pub-id"/>
+            <xsl:text>
+</xsl:text>     
+        </xsl:if>
+        
+        <!-- MISCELLANIA -->
+        <xsl:if test="patent">
+            <xsl:text>| patent-number = </xsl:text>
+            <xsl:apply-templates select="patent"/>
+            <xsl:text>
+</xsl:text>     
+        </xsl:if>
+        
+        <!-- UNFORMATTED CITATION BITS 
+                i.e. everything else.
+                NOTE: We might want to further prune the elements that 
+                    will be output here if things get too sloppy;
+                    or perhaps only target <comment> and <annotation>?
+                These should come at the end of the ref block, which is why
+                  we don't do a generic <apply-templates select="*"/>for these
+                  and the cases handled above, as that would output 
+                  all elements in document order.
+        -->
+        <xsl:apply-templates select="*[not(self::string-name|self::person-group|self::date|self::year|self::month|self::string-date|self::date-in-citation|self::article-title|self::source|self::trans-title|self::trans-source|self::chapter-title|self::issue|self::volume|self::publisher-name|self::publisher-loc|self::series|self::edition|self::page-range|self::fpage|self::lpage|self::elocation-id|self::ext-link|self::uri|self::issn|self::isbn|self::pub-id|self::patent)]"/>
 
         <!-- close citations block -->
         <xsl:text>
