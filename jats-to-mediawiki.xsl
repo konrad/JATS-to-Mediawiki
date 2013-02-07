@@ -35,7 +35,8 @@
     <xsl:template match="/article">
         
         <!-- Start MediaWiki document -->
-        <xsl:element  name="mediawiki" namespace="http://www.mediawiki.org/xml/export-0.7/">
+        <xsl:element  name="mediawiki">
+            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.7/</xsl:attribute>
             <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.7/ http://www.mediawiki.org/xml/export-0.7.xsd</xsl:attribute>
             <xsl:attribute name="version">0.7</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
