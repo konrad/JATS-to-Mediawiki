@@ -2,11 +2,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ex="http://exslt.org/dates-and-times"   
+    extension-element-prefixes="ex"
     version="1.0">
 
     <xsl:import href="lib/serialize.xsl"/>
   
-    <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.6.xsd
+    <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.7.xsd
          For article content, targeting features listed on, or linked to from, x -->
     
     <!-- Input: 2012-05-18: Supports NISO JATS Archival and Interchange Tagset 0.4 --> 
@@ -21,7 +23,7 @@
     <xsl:variable name="tableBorder">1</xsl:variable>
 
 
-    <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="yes" indent="yes"/>
+    <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="yes"/>
     <xsl:strip-space elements="*"/>
     
     
@@ -33,9 +35,9 @@
     <xsl:template match="/article">
         
         <!-- Start MediaWiki document -->
-        <xsl:element  name="mediawiki" namespace="http://www.mediawiki.org/xml/export-0.6/">
-            <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.6/ http://www.mediawiki.org/xml/export-0.6.xsd</xsl:attribute>
-            <xsl:attribute name="version">0.6</xsl:attribute>
+        <xsl:element  name="mediawiki" namespace="http://www.mediawiki.org/xml/export-0.7/">
+            <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.7/ http://www.mediawiki.org/xml/export-0.7.xsd</xsl:attribute>
+            <xsl:attribute name="version">0.7</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
 
             <!-- skip siteinfo element; contains information about the wiki this xml was exported FROM, so does not pertain to our scenario. -->
@@ -46,26 +48,28 @@
                     <xsl:value-of select="/article/front/article-meta/title-group/article-title"/>
                 </xsl:element>
                  
-                 <!-- Value of 0 seems to connote what shows up in "Read" view in MediaWiki, i.e. the current version of the article -->
-                <xsl:element name="ns">0</xsl:element>
+                <!-- Value of 0 connotes a main article, see http://meta.wikimedia.org/wiki/Namespaces#List_of_namespaces -->
+               <xsl:element name="ns">0</xsl:element>
                 
-                <!-- skip element:id, will be generated on import -->
+                
+                <xsl:element name="id"><xsl:number value="position()" format="1" /></xsl:element>
                 <!-- skip element:redirect -->
                 <!-- skip element:restrictions -->
 
                 <xsl:element name="revision">
-                    <!-- skip element:id -->
-                    <!-- skip element:timestamp ... MediaWiki will stamp at at time of import -->
+                    <xsl:element name="id"><xsl:number value="position()" format="1" /></xsl:element>
+                    <xsl:element name="timestamp">
+                        <xsl:value-of select="ex:date-time()"/> 
+                    </xsl:element>
                     <!-- element:contributor
-                         QUESTION: Is this the username who uploaded the file, or the original author?
-                         If the former, should a value be supplied here, or is this supplied a s afunction of authenticating to the Wiki on input? -->
+                         QUESTION: Is this the username who uploaded the file, or the original author? -->
+                <xsl:element name="contributor"></xsl:element>
                     
                     <!-- element:comment
                          QUESTION: do we want to have a standard comment for the initial import version of the article?  Perhaps describing the import process. -->
-                    
-                    <!-- skip element:type ... use not documented -->
-                    <!-- skip element:action ... use not documented -->
-                    
+
+                    <!-- Not clear if this is checksum for XML or XML + media files, so leaving blank -->
+                    <xsl:element name="sha1"></xsl:element>                    
 
                     <xsl:element name="text">
                         <xsl:attribute name="xml:space">preserve</xsl:attribute>
