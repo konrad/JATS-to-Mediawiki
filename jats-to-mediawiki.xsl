@@ -484,12 +484,10 @@
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="//ref[@id=$rid]">
-                <xsl:element name="ref">
-                    <xsl:attribute name="name">
-                        <xsl:value-of select="$rid"/>
-                    </xsl:attribute>
-                    <xsl:apply-templates/>
-                </xsl:element>
+                <!-- escaping xml tags -->
+                <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$rid"/><xsl:text>&gt;</xsl:text>
+                <xsl:apply-templates/>
+                <xsl:text>&lt;/ref&gt;</xsl:text>
             </xsl:when>
             <!-- No matching ID to link to, so don't build link. -->
             <xsl:otherwise>
@@ -513,9 +511,9 @@
         </xsl:choose>
         <xsl:text> ==
 </xsl:text>
-        <xsl:element name="references">
+        <xsl:text>&lt;references&gt;</xsl:text>
             <xsl:apply-templates/>
-        </xsl:element>
+        <xsl:text>&lt;/references&gt;</xsl:text>
     </xsl:template>
     
     <xsl:template match="ref">
@@ -534,13 +532,9 @@
         <!-- QUESTION: better to let the error display, or suppress and fail quietly? -->
         <!-- Test that there's a link to this footnote; if not, Wiki will display an error, so don't bother. -->
         <xsl:if test="//xref[@rid=$refID]">
-            <xsl:element name="ref">
-                <xsl:attribute name="name">
-                    <xsl:value-of select="$refID"/>  
-                </xsl:attribute>
+            <xsl:text>&lt;ref name=</xsl:text><xsl:value-of select="$refID"/><xsl:text>&gt;</xsl:text>
                 <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
-                
-            </xsl:element>
+                <xsl:text>&lt;/ref&gt;</xsl:text>
             <xsl:text> <!-- newline -->
 </xsl:text>
         </xsl:if>   
