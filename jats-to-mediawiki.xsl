@@ -350,14 +350,14 @@
                 <xsl:text>|</xsl:text>
                 <xsl:apply-templates select="caption"/>
             </xsl:when>
-            <xsl:when test="ancestor::fig/caption">
+            <xsl:when test="parent::fig/caption">
                 <xsl:text>|</xsl:text>
                 <xsl:apply-templates select="ancestor::fig/caption"/>
             </xsl:when>
-            <xsl:when test="ancestor::fig-group/caption">
+            <xsl:when test="parent::fig-group/caption">
                 <xsl:text>|</xsl:text>
                 <xsl:apply-templates select="ancestor::fig-group/caption"/>
-            </xsl:when>            
+            </xsl:when>
         </xsl:choose>
         <xsl:text>]]</xsl:text>
     </xsl:template>
@@ -588,7 +588,7 @@
 </xsl:text> 
         </xsl:if>
         <!-- OTHER DATES -->
-        <xsl:for-each select="date-in-citation[contains(@content-type, 'access')|contains(@content-type, 'stamp')]|access-date|time-stamp">
+        <xsl:for-each select="date-in-citation[contains(@content-type, 'access|stamp')]|access-date|time-stamp">
             <xsl:text>| accessdate = </xsl:text>
             <xsl:value-of select="."/>
             <xsl:text>
@@ -736,7 +736,7 @@
 </xsl:text>            
             </xsl:when>
             <!-- Avoid redundancy with specific ID fields below-->
-            <xsl:when test="ext-link[not(@ext-link-type='doi'|@ext-link-type='pmcid'|@ext-link-type='pmid')]">
+            <xsl:when test="ext-link[not(@ext-link-type='doi|pmcid|pmid')]">
                 <xsl:text>| url = </xsl:text>
                 <xsl:apply-templates select="ext-link"/>
                 <xsl:text>
@@ -810,7 +810,7 @@
         </xsl:choose>
         
         <!-- default catch-all id -->
-        <xsl:if test="pub-id[not(@pub-id-type='doi'|@pub-id-type='pmcid'|@pub-id-type='pmid')]">
+        <xsl:if test="pub-id[not(@pub-id-type='doi|pmcid|pmid')]">
             <xsl:text>| id = </xsl:text>
             <xsl:apply-templates select="pub-id"/>
             <xsl:text>
