@@ -8,7 +8,7 @@
 
     <xsl:import href="lib/serialize.xsl"/>
   
-    <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.7.xsd
+    <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.8.xsd
          For article content, targeting features listed on, or linked to from, x -->
     
     <!-- Input: 2012-05-18: Supports NISO JATS Archival and Interchange Tagset 0.4 --> 
@@ -36,9 +36,9 @@
         
         <!-- Start MediaWiki document -->
         <xsl:element  name="mediawiki">
-            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.7/</xsl:attribute>
-            <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.7/ http://www.mediawiki.org/xml/export-0.7.xsd</xsl:attribute>
-            <xsl:attribute name="version">0.7</xsl:attribute>
+            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.8/</xsl:attribute>
+            <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd</xsl:attribute>
+            <xsl:attribute name="version">0.8</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
 
             <!-- skip siteinfo element; contains information about the wiki this xml was exported FROM, so does not pertain to our scenario. -->
@@ -64,13 +64,12 @@
                     </xsl:element>
                     <!-- element:contributor
                          QUESTION: Is this the username who uploaded the file, or the original author? -->
-                <xsl:element name="contributor"></xsl:element>
+                <xsl:element name="contributor">
+                    <xsl:element name="username">Daniel Mietchen</xsl:element>
+                </xsl:element>
                     
                     <!-- element:comment
                          QUESTION: do we want to have a standard comment for the initial import version of the article?  Perhaps describing the import process. -->
-
-                    <!-- Not clear if this is checksum for XML or XML + media files, so leaving blank -->
-                    <xsl:element name="sha1"></xsl:element>                    
 
                     <xsl:element name="text">
                         <xsl:attribute name="xml:space">preserve</xsl:attribute>
@@ -79,6 +78,13 @@
                         <xsl:apply-templates select="//body"/>
                         <xsl:apply-templates select="//back"/>
                     </xsl:element>
+                    
+                    <!-- Not clear what exactly to checksum, so leaving blank -->
+                    <xsl:element name="sha1"></xsl:element>                    
+                    
+                    <xsl:element name="model">wikitext</xsl:element>
+                    
+                    <xsl:element name="format">text/x-wiki</xsl:element>
                 </xsl:element>    
 
                 <!-- skip element:upload ... no documentation to explain what this is, but requires things like filesize which we couldn't support -->
