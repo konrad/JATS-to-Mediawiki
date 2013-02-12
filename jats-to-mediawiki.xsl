@@ -75,6 +75,7 @@
                         <xsl:attribute name="xml:space">preserve</xsl:attribute>
 
                         <!-- Here's the meat of the article. -->
+                        <xsl:apply-templates select="//front"/>
                         <xsl:apply-templates select="//body"/>
                         <xsl:apply-templates select="//back"/>
                     </xsl:element>
@@ -95,7 +96,56 @@
 
         </xsl:element>        
     </xsl:template>
-    
+
+    <xsl:template match="front">
+        <xsl:apply-templates select="journal-meta"/>
+        <!-- <xsl:apply-templates select="article-meta"/> -->
+        <!-- <xsl:apply-templates select="article-meta/abstract"/> -->
+    </xsl:template>
+
+    <xsl:template match="journal-meta">
+        <!-- Using Template:Infobox_journal -->
+        <xsl:text>{{Infobox journal
+</xsl:text>
+        <xsl:if test="descendant::journal-title">
+        <xsl:text>| title         = </xsl:text>
+        <xsl:value-of select="descendant::journal-title[1]"/>
+        <xsl:text>
+</xsl:text>    
+        </xsl:if>
+
+        <xsl:if test="descendant::publisher-name">
+            <xsl:text>| publisher        = </xsl:text>
+            <xsl:apply-templates select="descendant::publisher-name"/>
+            <xsl:text>
+</xsl:text>    
+        </xsl:if>
+        
+        <!--         | JSTOR         =  -->
+        <!--         | OCLC          =  -->
+        <!--         | LCCN          =  -->
+        <!--         | CODEN         =  -->
+        <xsl:choose>
+            <xsl:when test="descendant::issn">
+                <xsl:text>| ISSN         = </xsl:text>
+                <xsl:value-of select="descendant::issn"/>
+                <xsl:text>
+</xsl:text>    
+            </xsl:when>
+            <xsl:when test="descendant::journal-id[@journal-id-type='issn']">
+                <xsl:text>| ISSN         = </xsl:text>
+                <xsl:value-of select="descendant::journal-id[@journal-id-type='issn']"/>
+                <xsl:text>
+</xsl:text>    
+            </xsl:when>
+        </xsl:choose>
+        
+<!--         | eISSN         =   --> 
+<!--         | boxwidth      =  -->
+        <xsl:text>}}
+</xsl:text>
+    </xsl:template>
+
     <xsl:template match="body">
             <xsl:apply-templates select="p"/>
             <xsl:apply-templates select="sec"/>
@@ -480,7 +530,7 @@
 
     
     <!-- ***FOOTNOTES & REFERENCES*** -->
-    <!-- TODO! -->
+	<!-- NOTE: WikiMedia autio-wraps footnote links in square brackets; if the source data explicitly wraps <xref> elements in square brackets, then you end up with some uglyu rendering like '[[5]]'.  Since the outside brackets are CDATA children of the xref's parent element, and xref is in the content model for a wide array of elements, scrubbing out those outside square brackets is very difficult (impossible?) in XSLT.  -->
     
     <!-- Using Wikipedia List-defined references (see: http://en.wikipedia.org/wiki/Help:List-defined_references ) to reflect JATS/NLM document structure -->
     <!-- The ref to the footnote -->
