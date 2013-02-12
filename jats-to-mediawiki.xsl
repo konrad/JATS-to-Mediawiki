@@ -98,46 +98,70 @@
     </xsl:template>
 
     <xsl:template match="front">
-        <xsl:apply-templates select="journal-meta"/>
+        <xsl:call-template name="journalInfobox"/>
         <!-- <xsl:apply-templates select="article-meta"/> -->
         <!-- <xsl:apply-templates select="article-meta/abstract"/> -->
     </xsl:template>
 
-    <xsl:template match="journal-meta">
+    <xsl:template name="journalInfobox">
         <!-- Using Template:Infobox_journal -->
         <xsl:text>{{Infobox journal
 </xsl:text>
-        <xsl:if test="descendant::journal-title">
+        <xsl:if test="journal-meta/descendant::journal-title">
         <xsl:text>| title         = </xsl:text>
-        <xsl:value-of select="descendant::journal-title[1]"/>
+            <xsl:value-of select="journal-meta/descendant::journal-title[1]"/>
         <xsl:text>
 </xsl:text>    
         </xsl:if>
 
-        <xsl:if test="descendant::publisher-name">
-            <xsl:text>| publisher        = </xsl:text>
-            <xsl:apply-templates select="descendant::publisher-name"/>
+        <xsl:if test="journal-meta/descendant::abbrev-journal-title">
+            <xsl:text>| abbreviation         = </xsl:text>
+            <xsl:apply-templates select="journal-meta/descendant::abbrev-journal-title[1]"/>
             <xsl:text>
 </xsl:text>    
         </xsl:if>
         
+
+        <xsl:if test="journal-meta/descendant::publisher-name">
+            <xsl:text>| publisher        = </xsl:text>
+            <xsl:apply-templates select="journal-meta/descendant::publisher-name"/>
+            <xsl:text>
+</xsl:text>    
+        </xsl:if>
+
+        <xsl:if test="article-meta/descendant::license[@license-type='open-access']">
+            <xsl:text>| openaccess        = yes
+</xsl:text>
+        </xsl:if>
+        <xsl:if test="article-meta/descendant::license">
+            <xsl:text>| license        = </xsl:text>
+            <xsl:apply-templates select="article-meta/descendant::license"/>
+            <xsl:text>
+</xsl:text>    
+            
+        </xsl:if>
+
+
+
+
         <!--         | JSTOR         =  -->
         <!--         | OCLC          =  -->
         <!--         | LCCN          =  -->
         <!--         | CODEN         =  -->
         <xsl:choose>
-            <xsl:when test="descendant::issn">
+            <xsl:when test="journal-meta/descendant::issn">
                 <xsl:text>| ISSN         = </xsl:text>
-                <xsl:value-of select="descendant::issn"/>
+                <xsl:value-of select="journal-meta/descendant::issn"/>
                 <xsl:text>
 </xsl:text>    
             </xsl:when>
-            <xsl:when test="descendant::journal-id[@journal-id-type='issn']">
+            <xsl:when test="journal-meta/descendant::journal-id[@journal-id-type='issn']">
                 <xsl:text>| ISSN         = </xsl:text>
-                <xsl:value-of select="descendant::journal-id[@journal-id-type='issn']"/>
+                <xsl:value-of select="journal-meta/descendant::journal-id[@journal-id-type='issn']"/>
                 <xsl:text>
-</xsl:text>    
+</xsl:text>
             </xsl:when>
+            
         </xsl:choose>
         
 <!--         | eISSN         =   --> 
