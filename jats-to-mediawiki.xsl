@@ -76,6 +76,7 @@
 
                         <!-- Here's the meat of the article. -->
                         <xsl:apply-templates select="front"/>
+                        <xsl:apply-templates select="front/article-meta/abstract"/>
                         <xsl:apply-templates select="body"/>
                         <xsl:apply-templates select="back"/>
                     </xsl:element>
@@ -190,10 +191,6 @@
         <xsl:text>
 }}
 </xsl:text>
-        
-        <xsl:if test="article-meta//article-title">
-            
-        </xsl:if>
     </xsl:template>
 
     <xsl:template match="contrib" mode="headerTemplateContrib">
@@ -257,6 +254,11 @@
         </xsl:choose>
     </xsl:template>
 
+
+    <xsl:template match="abstract">
+        <xsl:text>==Abstract==</xsl:text>
+        <xsl:apply-templates/>
+    </xsl:template>
 
     <xsl:template match="body">
             <xsl:apply-templates select="p"/>
@@ -394,7 +396,6 @@
         <!-- context is <sec> -->
         <!-- newline for legibility -->
         <xsl:text>
-            
 </xsl:text>
         <xsl:call-template name="CreateHeadingTag"/>
         <xsl:value-of select="title"/>
@@ -408,7 +409,7 @@
     <!-- Determine depth of current sec to format wiki heading to same depth -->
     <xsl:template name="CreateHeadingTag">
         <xsl:text>=</xsl:text> <!-- Start at level 2 (level 1 is article title) -->
-        <xsl:for-each select="ancestor-or-self::sec|ancestor-or-self::label[parent::table-wrap]">
+        <xsl:for-each select="ancestor-or-self::sec|ancestor-or-self::label[parent::table-wrap]|ancestor::abstract">
             <xsl:text>=</xsl:text>
         </xsl:for-each>
     </xsl:template>
