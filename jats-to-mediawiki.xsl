@@ -75,9 +75,9 @@
                         <xsl:attribute name="xml:space">preserve</xsl:attribute>
 
                         <!-- Here's the meat of the article. -->
-                        <xsl:apply-templates select="//front"/>
-                        <xsl:apply-templates select="//body"/>
-                        <xsl:apply-templates select="//back"/>
+                        <xsl:apply-templates select="front"/>
+                        <xsl:apply-templates select="body"/>
+                        <xsl:apply-templates select="back"/>
                     </xsl:element>
                     
                     <!-- Not clear what exactly to checksum, so leaving blank -->
@@ -98,77 +98,165 @@
     </xsl:template>
 
     <xsl:template match="front">
-        <xsl:call-template name="journalInfobox"/>
-        <!-- <xsl:apply-templates select="article-meta"/> -->
-        <!-- <xsl:apply-templates select="article-meta/abstract"/> -->
-    </xsl:template>
-
-    <xsl:template name="journalInfobox">
-        <!-- Using Template:Infobox_journal -->
-        <xsl:text>{{Infobox journal
-</xsl:text>
-        <xsl:if test="journal-meta/descendant::journal-title">
-        <xsl:text>| title         = </xsl:text>
-            <xsl:value-of select="journal-meta/descendant::journal-title[1]"/>
+        <!-- Per Wikisource policy, all articles must begin with a populated header as defined in
+            http://en.wikisource.org/wiki/Template:Header, which specifies that unused template parameters
+            should *NOT* be removed -->
+        <xsl:text>{{header
+    | title      = </xsl:text><xsl:apply-templates select="article-meta//article-title[1]"/>
+        <xsl:for-each select="article-meta//subtitle">
+            <xsl:text>: </xsl:text>
+            <xsl:value-of select="."/>
+        </xsl:for-each>
         <xsl:text>
-</xsl:text>    
+    | author     = </xsl:text>
+        <!-- Wikisource header template auto-links authors but does not support multple authors;
+        If we have more than one, we must manually turn off wikilinking, since it will try to link
+        to one enrtry whose title is the combined names. -->
+        <xsl:if test="count(article-meta/contrib-group/contrib[starts-with(@contrib-type, 'a')]) > 1">
+            <xsl:text> |override_author= </xsl:text>            
         </xsl:if>
-
-        <xsl:if test="journal-meta/descendant::abbrev-journal-title">
-            <xsl:text>| abbreviation         = </xsl:text>
-            <xsl:apply-templates select="journal-meta/descendant::abbrev-journal-title[1]"/>
-            <xsl:text>
-</xsl:text>    
-        </xsl:if>
-        
-
-        <xsl:if test="journal-meta/descendant::publisher-name">
-            <xsl:text>| publisher        = </xsl:text>
-            <xsl:apply-templates select="journal-meta/descendant::publisher-name"/>
-            <xsl:text>
-</xsl:text>    
-        </xsl:if>
-
-        <xsl:if test="article-meta/descendant::license[@license-type='open-access']">
-            <xsl:text>| openaccess        = yes
+        <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'a')]" mode="headerTemplateContrib">
+            <xsl:with-param name="stem">a</xsl:with-param>     
+        </xsl:apply-templates>
+        <xsl:text>
+    | editor = </xsl:text>
+        <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'e')]" mode="headerTemplateContrib">
+            <xsl:with-param name="stem">e</xsl:with-param>     
+        </xsl:apply-templates>        
+        <xsl:text>
+    | translator = </xsl:text>
+        <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'tran')]" mode="headerTemplateContrib">
+            <xsl:with-param name="stem">a</xsl:with-param>     
+        </xsl:apply-templates>
+        <xsl:text>
+    | section    = </xsl:text>
+        <xsl:call-template name="journalCitation"/>
+        <xsl:text>
+    | contributor= </xsl:text>
+        <xsl:apply-templates select="article-meta/contrib-group/contrib[not(starts-with(@contrib-type, 'a')) and not(starts-with(@contrib-type, 'e')) and not(starts-with(@contrib-type, 'tran'))]" mode="headerTemplateContrib">
+            <xsl:with-param name="stem">a</xsl:with-param>     
+        </xsl:apply-templates>
+        <xsl:text>
+    | previous   = </xsl:text>
+        <xsl:text>
+    | next       = </xsl:text>
+        <xsl:text>
+    | year       = </xsl:text>
+        <!-- There could be several pub-dates based on @pub-type, but since that attribute does not
+            have a controlled vocabulary, trying to perform logic on it is perilous -->
+        <xsl:value-of select="article-meta/pub-date[1]/year"/>
+        <xsl:text>
+    | edition     = </xsl:text>
+        <xsl:text>
+    | categories     = </xsl:text>
+        <xsl:for-each select="article-meta//subject">
+            <xsl:value-of select="."/>
+            <xsl:if test="position()!=last()">
+                <xsl:text> / </xsl:text>
+            </xsl:if>
+        </xsl:for-each>
+        <xsl:text>
+    | shortcut     = </xsl:text>
+        <xsl:text>
+    | portal     = </xsl:text>
+        <xsl:text>
+    | wikipedia  = </xsl:text>
+        <xsl:text>
+    | commons    = </xsl:text>
+        <xsl:text>
+    | commonscat = </xsl:text>
+        <xsl:text>
+    | wikiquote  = </xsl:text>
+        <xsl:text>
+    | wikinews   = </xsl:text>
+        <xsl:text>
+    | wiktionary = </xsl:text>
+        <xsl:text>
+    | wikibooks  = </xsl:text>
+        <xsl:text>
+    | wikiversity= </xsl:text>
+        <xsl:text>
+    | wikispecies= </xsl:text>
+        <xsl:text>
+    | wikivoyage = </xsl:text>
+        <xsl:text>
+    | wikidata   = </xsl:text>
+        <xsl:text>
+    | wikilivres = </xsl:text>
+        <xsl:text>
+    | meta       = </xsl:text>
+        <xsl:text>
+    | notes      = </xsl:text>
+        <xsl:text>
+}}
 </xsl:text>
-        </xsl:if>
-        <xsl:if test="article-meta/descendant::license">
-            <xsl:text>| license        = </xsl:text>
-            <xsl:apply-templates select="article-meta/descendant::license"/>
-            <xsl:text>
-</xsl:text>    
+        
+        <xsl:if test="article-meta//article-title">
             
         </xsl:if>
-
-
-
-
-        <!--         | JSTOR         =  -->
-        <!--         | OCLC          =  -->
-        <!--         | LCCN          =  -->
-        <!--         | CODEN         =  -->
-        <xsl:choose>
-            <xsl:when test="journal-meta/descendant::issn">
-                <xsl:text>| ISSN         = </xsl:text>
-                <xsl:value-of select="journal-meta/descendant::issn"/>
-                <xsl:text>
-</xsl:text>    
-            </xsl:when>
-            <xsl:when test="journal-meta/descendant::journal-id[@journal-id-type='issn']">
-                <xsl:text>| ISSN         = </xsl:text>
-                <xsl:value-of select="journal-meta/descendant::journal-id[@journal-id-type='issn']"/>
-                <xsl:text>
-</xsl:text>
-            </xsl:when>
-            
-        </xsl:choose>
-        
-<!--         | eISSN         =   --> 
-<!--         | boxwidth      =  -->
-        <xsl:text>}}
-</xsl:text>
     </xsl:template>
+
+    <xsl:template match="contrib" mode="headerTemplateContrib">
+        <xsl:param name="stem"/>
+        <xsl:if test="preceding-sibling::contrib[starts-with(@contrib-type, $stem)]">
+            <xsl:text>; </xsl:text>
+        </xsl:if>
+        <xsl:apply-templates select="name" mode="headerTemplateContrib"/>
+    </xsl:template>
+
+    <xsl:template match="name" mode="headerTemplateContrib">
+        <xsl:apply-templates select="prefix"/>
+        <xsl:text> </xsl:text>
+        <xsl:apply-templates select="given-names"/>
+        <xsl:text> </xsl:text>
+        <xsl:apply-templates select="surname"/>
+        <xsl:if test="suffix">
+            <xsl:text>, </xsl:text>
+            <xsl:apply-templates select="suffix"/>
+        </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="journalCitation">
+        <xsl:if test="journal-meta//journal-title">
+            <xsl:text>''</xsl:text> <!-- itlaics -->
+            <xsl:apply-templates select="journal-meta//journal-title[1]"/>
+            <xsl:text>''</xsl:text>
+            <xsl:text> </xsl:text>
+        </xsl:if>
+        <xsl:if test="journal-meta//journal-title and (article-meta/volume | article-meta/issue)">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:if test="article-meta/volume">
+            <xsl:text>vol. </xsl:text><xsl:value-of select="article-meta/volume[1]"/>    
+        </xsl:if>
+        <xsl:if test="article-meta/volume and article-meta/issue">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:if test="article-meta/issue">
+            <xsl:text>iss. </xsl:text><xsl:value-of select="article-meta/isse[1]"/>
+        </xsl:if>
+        <xsl:if test="(journal-meta//journal-title | article-meta/volume | article-meta/issue) and (article-meta/fpage | article-meta/lpage | article-meta/page-range)">
+            <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:choose>
+            <xsl:when test="article-meta/page-range">
+                <xsl:text>pp.</xsl:text>
+                <xsl:value-of select="article-meta/page-range"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:choose>
+                    <xsl:when test="article-meta/fpage != article-meta/lpage">pp.</xsl:when>
+                    <xsl:otherwise>p.</xsl:otherwise>
+                </xsl:choose>
+                <xsl:value-of select="article-meta/fpage"/>
+                <xsl:if test="article-meta/fpage != article-meta/lpage">
+                    <xsl:text>-</xsl:text>
+                    <xsl:value-of select="article-meta/lpage"/>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
 
     <xsl:template match="body">
             <xsl:apply-templates select="p"/>
