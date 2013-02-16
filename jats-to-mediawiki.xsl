@@ -337,12 +337,19 @@
         <br/><xsl:apply-templates/>
     </xsl:template>
     
+    <xsl:template match="sub">
+        <xsl:text>&lt;sub&gt;</xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&lt;/sub&gt;</xsl:text>
+    </xsl:template>
     <xsl:template match="sup">
         <xsl:text>&lt;sup&gt;</xsl:text>
         <xsl:apply-templates/>
         <xsl:text>&lt;/sup&gt;</xsl:text>
     </xsl:template>
     
+
+
     <!-- ***LINKS*** -->
     <!-- Note on <email>: "If both a textual phrase (“the Moody Institute’s email address”) and a mailto URL are required, the <ext-link> element should be used."
          (http://jats.nlm.nih.gov/archiving/tag-library/0.4/index.html?elem=email) -->
