@@ -347,8 +347,6 @@
         <xsl:apply-templates/>
         <xsl:text>&lt;/sup&gt;</xsl:text>
     </xsl:template>
-    
-
 
     <!-- ***LINKS*** -->
     <!-- Note on <email>: "If both a textual phrase (“the Moody Institute’s email address”) and a mailto URL are required, the <ext-link> element should be used."
@@ -400,7 +398,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
+
     <!-- TODO: anchor links to section heads -->
     <!-- TODO: "Internal link to an image or a file of other types" (http://www.mediawiki.org/wiki/Help:Links) -->
         
@@ -671,7 +669,13 @@
                 <xsl:apply-templates/>
                 <xsl:text>&lt;/ref&gt;</xsl:text>
             </xsl:when>
-            <!-- No matching ID to link to, so don't build link. -->
+            <xsl:when test="//table[@id=$rid]|//table-wrap[@id=$rid]">
+                <xsl:text>[[#</xsl:text>
+                <xsl:value-of select="translate(//node()[@id=$rid]/label,' ','_')"/>
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates/>
+                <xsl:text>]]</xsl:text>                
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates/>
             </xsl:otherwise>
