@@ -258,6 +258,8 @@
 
     <xsl:template match="abstract">
         <xsl:text>==Abstract==</xsl:text>
+        <xsl:text>
+</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -669,6 +671,7 @@
                 <xsl:apply-templates/>
                 <xsl:text>&lt;/ref&gt;</xsl:text>
             </xsl:when>
+            <!-- Internal links to tables -->
             <xsl:when test="//table[@id=$rid]|//table-wrap[@id=$rid]">
                 <xsl:text>[[#</xsl:text>
                 <xsl:value-of select="translate(//node()[@id=$rid]/label,' ','_')"/>
