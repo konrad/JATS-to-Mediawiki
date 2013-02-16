@@ -402,7 +402,6 @@
     </xsl:template>
 
     <!-- TODO: anchor links to section heads -->
-    <!-- TODO: "Internal link to an image or a file of other types" (http://www.mediawiki.org/wiki/Help:Links) -->
         
     <!-- ***HEADINGS*** -->
     <xsl:template name="CreateHeading">
@@ -414,8 +413,7 @@
         <xsl:value-of select="title"/>
         <xsl:call-template name="CreateHeadingTag"/>
         <!-- newline for legibility -->
-        <xsl:text>
-            
+        <xsl:text>            
 </xsl:text>
         </xsl:template>
     
@@ -652,6 +650,29 @@
     
     </xsl:template>
     
+
+    <xsl:template match="supplementary-material">
+        <xsl:text>
+</xsl:text>
+        <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
+        <xsl:choose>
+            <xsl:when test="label!=''">
+                <xsl:value-of select="label"/>
+            </xsl:when>
+            <xsl:when test="caption/title!=''">
+                <xsl:value-of select="caption/title"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:text>Supplemental file</xsl:text>
+            </xsl:otherwise>
+        </xsl:choose>
+        <xsl:call-template name="CreateHeadingTag"/><xsl:text>=
+</xsl:text>
+        <xsl:apply-templates/>
+    </xsl:template>
+
+    <!-- skip, since we called this explicitly when writing the section head -->
+    <xsl:template match="supplementary-material/label|supplementary-material/caption/title"/>
     
 
     
@@ -675,6 +696,21 @@
             <xsl:when test="//table[@id=$rid]|//table-wrap[@id=$rid]">
                 <xsl:text>[[#</xsl:text>
                 <xsl:value-of select="translate(//node()[@id=$rid]/label,' ','_')"/>
+                <xsl:text>|</xsl:text>
+                <xsl:apply-templates/>
+                <xsl:text>]]</xsl:text>                
+            </xsl:when>
+            <!-- Internal links to supplemental materials -->
+            <xsl:when test="//supplementary-material[@id=$rid]">
+                <xsl:text>[[#</xsl:text>
+                <xsl:choose>
+                    <xsl:when test="//node()[@id=$rid]/label">
+                        <xsl:value-of select="translate(//node()[@id=$rid]/label,' ','_')"/>
+                    </xsl:when>
+                    <xsl:when test="//node()[@id=$rid]/caption/title">
+                        <xsl:value-of select="translate(//node()[@id=$rid]/caption/title,' ','_')"/>
+                    </xsl:when>
+                </xsl:choose>
                 <xsl:text>|</xsl:text>
                 <xsl:apply-templates/>
                 <xsl:text>]]</xsl:text>                
