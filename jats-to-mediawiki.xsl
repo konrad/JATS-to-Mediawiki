@@ -79,6 +79,7 @@
                         <xsl:apply-templates select="front/article-meta/abstract"/>
                         <xsl:apply-templates select="body"/>
                         <xsl:apply-templates select="back"/>
+                        <xsl:apply-templates select="front/article-meta//license"/>
                     </xsl:element>
                     
                     <!-- Not clear what exactly to checksum, so leaving blank -->
@@ -1013,7 +1014,44 @@
     </xsl:template>
 
     
-    
+    <xsl:template match="license">
+        <!-- We need controlled vocabulary to match a license description in the article markup
+            with the appropriate license template in WikiSource.  For this purpose, we'll examine the 
+            <license> element for a URI, however, NLM/JATS are quite flexible in how this is encoded. -->
+        <xsl:variable name="licenseURI">
+            <xsl:choose>
+                <!-- order these by reliability -->
+                <xsl:when test="@xlink:href">
+                    <xsl:value-of select="@xlink:href"/>
+                </xsl:when>
+                <xsl:when test="license-p/uri">
+                    <xsl:value-of select="license-p/uri"/>
+                </xsl:when>
+                <xsl:when test="p/uri">
+                    <xsl:value-of select="p/uri"/>
+                </xsl:when>
+                <xsl:when test="p/ext-link[@ext-link-type='uri']">
+                    <xsl:value-of select="p/ext-link[@ext-link-type='uri']"/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:if test="$licenseURI">
+            <xsl:text>
+{{</xsl:text>
+            <!-- attempt to match the URI to an appropriate template -->
+            <xsl:choose>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/2.0')">CC-BY-2.0</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/2.5')">CC-BY-2.5</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/3.0/au')">CC-by-3.0-au</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/3.0/us')">CC-by-3.0-us</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/3.0')">Cc-by-3.0</xsl:when>            
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0/us/')">CC-by-sa-3.0-us</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0')">CC-BY-SA-3.0</xsl:when>
+                <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/2.0')">CC-BY-SA-2.0</xsl:when>
+            </xsl:choose>
+            <xsl:text>}}</xsl:text>
+        </xsl:if>
+    </xsl:template>
     
     <!-- TODO: include table-wrap-foot -->
 
