@@ -15,6 +15,13 @@ it to be tightly integrated with the [open-access-media-importer][5].
 
 ## Example (bash):
 
+    # Grab the JATS dtd (needed to parse the article XML):
+    $ mkdir dtd
+    $ cd dtd
+    $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
+    $ unzip *.zip
+    $ cd ..
+
     # Get the open-access file list from PMC
     $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
 
@@ -24,13 +31,16 @@ it to be tightly integrated with the [open-access-media-importer][5].
 
     # Append the filename to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/
     # and download and unzip this file
-    $ wget -c wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz
+    $ wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz
     $ tar xzvf BMC_Med_2011_Feb_17_9_17.tar.gz
 
     # Use an XSLT processor (e.g. xsltproc) to apply the XSL file to the .nxml file.
     $ cd BMC_Med_2011_Feb_17_9_17
-    $ ls *.nxml
-    1741-7015-9-17.nxml
+
+    # (First modify the doctype declaration to point to the DTD you downloaded above.)
+    # ... [editor of choice] ...
+
+    # Now do the conversion
     $ xsltproc $JTM/jats-to-mediawiki.xsl 1741-7015-9-17.nxml > PMC3040697.mw.xml
 
 In a browser, go to the import page of your target mediawiki installation, and import it.
