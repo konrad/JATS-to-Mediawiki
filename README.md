@@ -13,37 +13,65 @@ it to be tightly integrated with the [open-access-media-importer][5].
 
 [5]: http://en.wikiversity.org/wiki/User:OpenScientist/Open_grant_writing/Wissenswert_2011/Documentation
 
-## Example (bash):
+## Set up your environment
 
-    # Grab the JATS dtd (needed to parse the article XML):
-    $ mkdir dtd
-    $ cd dtd
-    $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
-    $ unzip *.zip
-    $ cd ..
+The following command should work in a `bash` shell.
 
-    # Get the open-access file list from PMC
-    $ wget ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/file_list.txt
+```
+# Clone this repository
+git clone https://github.com/konrad/JATS-to-Mediawiki.git
+cd JATS-to-Mediawiki
 
-    # Find a specific publication file by the PMC ID.
-    $ grep PMC3040697 file_list.txt
-    32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz BMC Med. 2011 Feb 17; 9:17  PMC3040697
+# Get the JATS dtd
+mkdir dtd
+cd dtd
+wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
+unzip *.zip
+cd ..
 
-    # Append the filename to the URL ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/
-    # and download and unzip this file
-    $ wget -c ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/32/0b/BMC_Med_2011_Feb_17_9_17.tar.gz
-    $ tar xzvf BMC_Med_2011_Feb_17_9_17.tar.gz
+# Make sure you have xsltproc
+which xsltproc   # should return with the location of your xsltproc command
 
-    # Use an XSLT processor (e.g. xsltproc) to apply the XSL file to the .nxml file.
-    $ cd BMC_Med_2011_Feb_17_9_17
+# Set up XML catalog file
+export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
+```
 
-    # (First modify the doctype declaration to point to the DTD you downloaded above.)
-    # ... [editor of choice] ...
+## Convert an article
 
-    # Now do the conversion
-    $ xsltproc $JTM/jats-to-mediawiki.xsl 1741-7015-9-17.nxml > PMC3040697.mw.xml
+The following are manual instructions for converting a single article, given its DOI.
+It would be fairly easy to script, if you want.
 
-In a browser, go to the import page of your target mediawiki installation, and import it.
+First, you need to find the PMCID for the article.  If you have the DOI (for example,
+`10.1371/journal.pone.0010676`) the easiest way to do this is with the [PMC ID converter
+API](http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/).  Point your browser at
+[http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json](),
+and make a note of the `pmcid` value (in this example, `PMC2873961`).
+
+Next, find the location of the gzip archive file for this article, using the [PMC OA web
+service](http://www.ncbi.nlm.nih.gov/pmc/tools/oa-service/).  Point your browser at
+[http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi?id=PMC2873961](), and look for the link with
+format `tgz`.
+
+Download that gzip archive with, for example (note the single quotes around the URL):
+
+```
+wget 'ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/e7/55/PLoS_One_2010_May_21_5(5)_e10676.tar.gz'
+```
+
+Unzip that, and change into that directory.  For example,
+
+```
+tar xvfz 'PLoS_One_2010_May_21_5(5)_e10676.tar.gz'
+cd 'PLoS_One_2010_May_21_5(5)_e10676'
+```
+
+Find the NXML file with `ls *.nxml`.  Now convert it with, for example
+
+```
+xsltproc ../jats-to-mediawiki.xsl pone.0010676.nxml > PMC2873961.mw.xml
+```
+
+In a browser, go to the `Special:Import` page of your target mediawiki installation, and import it.
 
 You could use the scripts/fetch_samples.sh script to grab several examples
 articles, which were used in testing.
