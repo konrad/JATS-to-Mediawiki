@@ -2,7 +2,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:ex="http://exslt.org/dates-and-times"   
+    xmlns:ex="http://exslt.org/dates-and-times"
+    xmlns:mml="http://www.w3.org/1998/Math/MathML"   
     extension-element-prefixes="ex"
     version="1.0">
 
@@ -348,6 +349,30 @@
         <xsl:text>&lt;sup&gt;</xsl:text>
         <xsl:apply-templates/>
         <xsl:text>&lt;/sup&gt;</xsl:text>
+    </xsl:template>
+
+    <!-- ***MATH*** -->
+    <xsl:template match="mml:math">
+        <xsl:text>&lt;math type="pmml"&gt;</xsl:text>
+            <!-- <xsl:copy-of select="."/> includes the mml prefix and does not escape <> -->
+            <xsl:apply-templates select="./*"/>
+        <xsl:text>&lt;/math&gt;</xsl:text>
+    </xsl:template>
+    <xsl:template match="mml:*">
+        <xsl:text> &lt;</xsl:text>
+        <xsl:value-of select="local-name()" />
+        <xsl:for-each select="@*">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="local-name()" />
+            <xsl:text> = "</xsl:text>
+            <xsl:value-of select="."/>
+            <xsl:text>"</xsl:text>
+        </xsl:for-each>
+        <xsl:text>&gt; </xsl:text>
+        <xsl:apply-templates />
+        <xsl:text>&lt;/</xsl:text>
+        <xsl:value-of select="local-name()"/>
+        <xsl:text>&gt; </xsl:text>
     </xsl:template>
 
     <!-- ***LINKS*** -->
