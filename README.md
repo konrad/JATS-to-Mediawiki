@@ -19,7 +19,7 @@ The following command should work in a `bash` shell.
 
 ```
 # Clone this repository
-git clone https://github.com/konrad/JATS-to-Mediawiki.git
+git clone https://github.com/Klortho/JATS-to-Mediawiki.git
 cd JATS-to-Mediawiki
 
 # Get the JATS dtd
@@ -82,11 +82,11 @@ articles, which were used in testing.
 
 ## Documentation
 
-Is on our [Github wiki](https://github.com/konrad/JATS-to-Mediawiki/wiki).
+Is on our [Github wiki](https://github.com/Klortho/JATS-to-Mediawiki/wiki).
 
 ## Bugs / issues
 
-We're using the [Github issue tracker](https://github.com/konrad/JATS-to-Mediawiki/issues)
+We're using the [Github issue tracker](https://github.com/Klortho/JATS-to-Mediawiki/issues)
 for bug reports and to-do items.
 
 ## Contact / Collaborate
