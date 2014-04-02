@@ -22,18 +22,19 @@ The following command should work in a `bash` shell.
 git clone https://github.com/Klortho/JATS-to-Mediawiki.git
 cd JATS-to-Mediawiki
 
-# Get the JATS dtd
-mkdir dtd
-cd dtd
-wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
-unzip *.zip
-cd ..
-
 # Make sure you have xsltproc
 which xsltproc   # should return with the location of your xsltproc command
 
 # Set up XML catalog file
 export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
+
+# (Optional) Check the JATS dtd Version
+wget http://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/ | grep "jats-archiving-dtd-1.0.zip"
+# if date modified is after "10/11/12 5:00:00 pm" then,
+rm -rf dtd/*
+cd dtd
+wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
+unzip *.zip
 ```
 
 ## Convert an article
