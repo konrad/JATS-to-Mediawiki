@@ -38,6 +38,12 @@ export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
 
 ## Convert an article
 
+### Automatic
+
+Driver scripts for the JATS-to-Mediawiki conversion library are forthcoming, to be listed here.
+
+### Manual
+
 The following are manual instructions for converting a single article, given its DOI.
 It would be fairly easy to script, if you want.
 
