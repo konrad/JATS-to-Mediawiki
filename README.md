@@ -54,8 +54,8 @@ API](http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/).  Point your brows
 and make a note of the `pmcid` value (in this example, `PMC2873961`).
 
 Next, find the location of the gzip archive file for this article, using the [PMC OA web
-service](http://ncbi.nlm.nih.gov/pmc/tools/oa-service/).  Point your browser at
-[http://pubmedcentral.nih.gov/utils/oa/oa.fcgi?id=PMC2873961](), and look for the link with
+service](http://www.ncbi.nlm.nih.gov/pmc/tools/oa-service/).  Point your browser at
+[http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi?id=PMC2873961](), and look for the link with
 format `tgz`.
 
 Download that gzip archive with, for example (note the single quotes around the URL):
