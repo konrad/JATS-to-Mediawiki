@@ -89,7 +89,7 @@ The following are manual instructions for converting a single article, given its
 First, you need to find the PMCID for the article.  If you have the DOI (for example,
 `10.1371/journal.pone.0010676`) the easiest way to do this is with the [PMC ID converter
 API](http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/).  Point your browser at
-[http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json](),
+[http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json](http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json),
 and make a note of the `pmcid` value (in this example, `PMC2873961`).
 
 Next, find the location of the gzip archive file for this article, using the [PMC OA web
