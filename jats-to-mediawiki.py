@@ -1,4 +1,4 @@
-import sys, os, traceback
+import sys, os, traceback, re
 import argparse
 import requests
 
@@ -19,7 +19,7 @@ def main():
 
             args = parser.parse_args()
 
-            print args #debug
+#            print args #debug
 
         except:
             print 'Unable to parse options, use the --help flag for usage information'
@@ -50,9 +50,10 @@ def main():
         # add articleids from file or STDIN
         if not sys.stdin.isatty() or infile.name != "<stdin>":
             articleids.extend([to_unicode_or_bust(line.strip()) for line in infile.readlines()])
-            print "trying to read"
+        # De-duplicate by converting to set (unique) then back to list again
+        articleids = list(set(articleids))
 
-        print articleids #debug
+#        print articleids #debug
 
         # set environment variable for xsltproc and jats dtd
         try:
@@ -63,7 +64,7 @@ def main():
             sys.exit(-1)
 
         # create temporary directory for zips
-        tmpdir = cwd + to_unicode_or_bust(tmpdir)
+        tmpdir = cwd + "/" + to_unicode_or_bust(tmpdir)
         try:
             if not os.path.exists(tmpdir):
                 os.makedirs(tmpdir)
@@ -71,14 +72,30 @@ def main():
             print 'Unable to find or create temporary directory'
             sys.exit(-1)
 
-        # define the params for the query
-        for articleid in articleids:
+        # separate DOIs and PMCIDs
+        articledois = [i for i in articleids if re.match('^10*', i)]
+        articlepmcids = [i for i in articleids if re.match('^PMC', i)]
 
+        # Send DOIs through PMC ID converter API:
+        # http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/
+        articledois = ",".join(articledois)
+        idpayload = {'ids' : articledois, 'format' : 'json'}
+        idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/', params=idpayload)
+        articlepmcidsfromdois = [i['pmcid'] for i in idconverter.json()['records']]
+
+        # Extend PMCIDs with those from converted DOIs
+        articlepmcids.extend(articlepmcidsfromdois)
+
+        # De-duplicate with set to list conversion
+        articlepmcids = list(set(articlepmcids))
+
+        # Main loop
+        for articlepmcid in articlepmcids:
             params = {
             }
 
-            if articleid:
-                print articleid.encode('utf-8')
+            if articlepmcid:
+                print articlepmcid.encode('utf-8')
 
     except KeyboardInterrupt:
         print "Killed script with keyboard interrupt, exiting..."
