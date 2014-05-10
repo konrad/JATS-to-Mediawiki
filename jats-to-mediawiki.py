@@ -13,13 +13,13 @@ def main():
             parser.add_argument('-x', '--xmlcatalogfiles', default='dtd/catalog-test-jats-v1.xml', help='path to xml catalog files for xsltproc')
 
             # some boolean flags
-            parser.add_argument('--some-bool', dest='somebool', action='store_false', help='some test bool')
-            parser.set_defaults(somebool=False)
+#            parser.add_argument('--some-bool', dest='somebool', action='store_false', help='some test bool')
+#            parser.set_defaults(somebool=False)
 
             # includes arbitrarily long list of keywords, or an input file
             parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='path to input file')
             parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout, help='path to output file')
-            parser.add_argument('-a', '--articles', nargs='+', default=None, help='article ID(s), either as DOIs or PMCIDs')
+            parser.add_argument('-a', '--articleids', nargs='+', default=None, help='an article ID or article IDs, either as DOIs or PMCIDs')
 
             args = parser.parse_args()
 
@@ -43,18 +43,18 @@ def main():
         # use .encode('utf-8') to encode late
 
         # Handle and convert input values
-        somebool = args.somebool
-        tmpdir = arg.tmpdir
+#        somebool = args.somebool
+        tmpdir = args.tmpdir
         xmlcatalogfiles = args.xmlcatalogfiles
         infile = args.infile
         outfile = args.outfile
-        articles = []
-        # add articles if passed as option values
-        if args.articles:
-            articles.extend([to_unicode_or_bust(articles) for article in args.articles])
-        # add articles from file or STDIN
+        articleids = []
+        # add articleids if passed as option values
+        if args.articleids:
+            articleids.extend([to_unicode_or_bust(articleids) for articleid in args.articleids])
+        # add articleids from file or STDIN
         if infile:
-            articles.extend([to_unicode_or_bust(line.strip()) for line in infile.readlines()])
+            articleids.extend([to_unicode_or_bust(line.strip()) for line in infile.readlines()])
 
         print articles #debug
 
