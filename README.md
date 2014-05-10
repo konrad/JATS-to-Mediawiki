@@ -35,7 +35,7 @@ This bash script provides a minimal interface.
 #### python
 This python script providess a robust and human-friendly interface, including streaming using stdin, stdout, and stderr. Article IDs can be passed to the script as stdin, listed by line in an input file `-i`, or are as arguments to the `-a` or `--articles` flag.
 
-**Setup**
+##### Setup
 
 ```
 virtualenv env/
@@ -43,7 +43,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-**Run**
+##### Run
 
 For command line usage, use python or otherwise execute the script with a `--help` flag
 
@@ -68,9 +68,14 @@ export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
 
 #### (Optional) Check the JATS dtd Version
 
-`wget http://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/ > dtd-tmp.html && cat index.html | grep "jats-archiving-dtd-1.0.zip" && rm dtd-tmp.html`
+Run this command to display the modified date
 
-#### If date modified is after "12-Oct-2012 08:36" then,
+```
+wget http://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/ > dtd-tmp.html && cat dtd-tmp.html | grep "jats-archiving-dtd-1.0.zip" && rm dtd-tmp.html
+```
+
+If date modified is after "12-Oct-2012 08:36" then, replace the dtd/ (and submit an issue to [this repository](https://github.com/Klortho/JATS-to-Mediawiki/issues/new) to update it):
+
 ```
 rm -rf dtd/*
 cd dtd
