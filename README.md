@@ -36,6 +36,7 @@ This bash script provides a minimal interface.
 This python script pythons a robust and human-friendly interface, including streaming using stdin, stdout, and stderr.
 ``
 virtualenv env/
+pip install -r requirements.txt
 source env/bin/activate
 pip install -r requirements.txt
 python jats-to-mediawiki.py
