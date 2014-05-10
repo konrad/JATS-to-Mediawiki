@@ -8,17 +8,13 @@ def main():
         # parse command line options
         try:
             # standard flags
-            parser = argparse.ArgumentParser(description='')
+            parser = argparse.ArgumentParser(description='Command-line interface to jats-to-mediawiki.xslt, a script to manage conversion of articles (documents) from JATS xml format to MediaWiki markup, based on DOI or PMCID')
             parser.add_argument('-t', '--tmpdir', default='tmp/', help='path to temporary directory for purposes of this script')
             parser.add_argument('-x', '--xmlcatalogfiles', default='dtd/catalog-test-jats-v1.xml', help='path to xml catalog files for xsltproc')
 
-            # some boolean flags
-#            parser.add_argument('--some-bool', dest='somebool', action='store_false', help='some test bool')
-#            parser.set_defaults(somebool=False)
-
             # includes arbitrarily long list of keywords, or an input file
-            parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='path to input file')
-            parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout, help='path to output file')
+            parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='path to input file', required=False)
+            parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout, help='path to output file', required=False)
             parser.add_argument('-a', '--articleids', nargs='+', default=None, help='an article ID or article IDs, either as DOIs or PMCIDs')
 
             args = parser.parse_args()
@@ -43,7 +39,6 @@ def main():
         # use .encode('utf-8') to encode late
 
         # Handle and convert input values
-#        somebool = args.somebool
         tmpdir = args.tmpdir
         xmlcatalogfiles = args.xmlcatalogfiles
         infile = args.infile
@@ -51,17 +46,18 @@ def main():
         articleids = []
         # add articleids if passed as option values
         if args.articleids:
-            articleids.extend([to_unicode_or_bust(articleids) for articleid in args.articleids])
+            articleids.extend([to_unicode_or_bust(articleid) for articleid in args.articleids])
         # add articleids from file or STDIN
-        if infile:
+        if not sys.stdin.isatty() or infile.name != "<stdin>":
             articleids.extend([to_unicode_or_bust(line.strip()) for line in infile.readlines()])
+            print "trying to read"
 
-        print articles #debug
+        print articleids #debug
 
         # set environment variable for xsltproc and jats dtd
         try:
             cwd = to_unicode_or_bust(os.getcwd())
-            os.environ["XML_CATALOG_FILES"]= cwd + "u'/" + to_unicode_or_bust(xmlcatalogfiles)
+            os.environ["XML_CATALOG_FILES"] = cwd + to_unicode_or_bust("/") + to_unicode_or_bust(xmlcatalogfiles)
         except:
             print 'Unable to set XML_CATALOG_FILES environment variable'
             sys.exit(-1)
@@ -76,10 +72,13 @@ def main():
             sys.exit(-1)
 
         # define the params for the query
-        for article in articles:
+        for articleid in articleids:
 
             params = {
             }
+
+            if articleid:
+                print articleid.encode('utf-8')
 
     except KeyboardInterrupt:
         print "Killed script with keyboard interrupt, exiting..."
