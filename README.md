@@ -33,17 +33,16 @@ This bash script provides a minimal interface.
 `bash jats-to-mediawiki.sh`
 
 #### python
-This python script providess a robust and human-friendly interface, including streaming using stdin, stdout, and stderr.
+This python script providess a robust and human-friendly interface, including streaming using stdin, stdout, and stderr. Article IDs can be passed to the script as stdin, listed by line in an input file `-i`, or are as arguments to the `-a` or `--articles` flag.
 
-##### Setup
+*Setup*
 ```
 virtualenv env/
 source env/bin/activate
 pip install -r requirements.txt
 ```
 
-##### Run
-
+*Run*
 For command line usage, use python or otherwise execute the script with a `--help` flag
 ```
 python jats-to-mediawiki.py --help
