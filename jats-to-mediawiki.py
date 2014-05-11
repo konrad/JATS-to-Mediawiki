@@ -143,7 +143,7 @@ def main():
             print xsltcommand
             xsltprocess = subprocess.Popen(xsltcommand, stdout=subprocess.PIPE, shell=True)
             (output, err) = xsltprocess.communicate()
-            print "Today is", output
+            print "XSLT output:", output
 
 
     except KeyboardInterrupt:
