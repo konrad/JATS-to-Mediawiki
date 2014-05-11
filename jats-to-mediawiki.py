@@ -1,6 +1,16 @@
 import sys, os, traceback, re
 import argparse
 import requests
+from bs4 import BeautifulSoup
+import wget
+import urllib
+import tarfile
+import subprocess
+import glob
+
+# Helper function
+def shellquote(s):
+    return "'" + s.replace("(", "\(").replace(")", "\)") + "'"
 
 def main():
     try:
@@ -53,7 +63,7 @@ def main():
         # De-duplicate by converting to set (unique) then back to list again
         articleids = list(set(articleids))
 
-#        print articleids #debug
+        print articleids #debug
 
         # set environment variable for xsltproc and jats dtd
         try:
@@ -76,12 +86,19 @@ def main():
         articledois = [i for i in articleids if re.match('^10*', i)]
         articlepmcids = [i for i in articleids if re.match('^PMC', i)]
 
+        articlepmcidsfromdois = []
+
         # Send DOIs through PMC ID converter API:
         # http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/
-        articledois = ",".join(articledois)
-        idpayload = {'ids' : articledois, 'format' : 'json'}
-        idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/', params=idpayload)
-        articlepmcidsfromdois = [i['pmcid'] for i in idconverter.json()['records']]
+        if articledois:
+
+            articledois = ",".join(articledois)
+            idpayload = {'ids' : articledois, 'format' : 'json'}
+            idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/', params=idpayload)
+            print idconverter.text
+            records = idconverter.json()['records']
+            if records:
+                articlepmcidsfromdois = [i['pmcid'] for i in records]
 
         # Extend PMCIDs with those from converted DOIs
         articlepmcids.extend(articlepmcidsfromdois)
@@ -89,13 +106,45 @@ def main():
         # De-duplicate with set to list conversion
         articlepmcids = list(set(articlepmcids))
 
-        # Main loop
+        # Main loop to grab the archive file, get the .nxml file, and convert
         for articlepmcid in articlepmcids:
-            params = {
-            }
 
-            if articlepmcid:
-                print articlepmcid.encode('utf-8')
+            # @TODO make flag an alternative to .tar.gz archive download
+            # use instead the regular API for xml document
+            # http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pmc&id=PMC2953622
+            # unclear if this front-facing XML is updated frequently
+            # I recall from plos that updates are made via packaged archives
+
+            # request archive file location
+            archivefilepayload = {'id' : articlepmcid}
+            archivefilelocator = requests.get('http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi', params=archivefilepayload)
+            record = BeautifulSoup(archivefilelocator.content)
+
+            # parse response for archive file location
+            archivefileurl = record.oa.records.record.find(format='tgz')['href']
+
+            # download the file
+            archivefilename = wget.filename_from_url(archivefileurl)
+            urllib.urlretrieve(archivefileurl, archivefilename)
+
+             # For some reason, the the wget hangs and doesn't finish:
+#            archivefile = wget.download(archivefileurl, wget.bar_thermometer)
+
+            # open the archive
+            archivedirectoryname, archivefileextension = archivefilename.split('.tar.gz')
+            print archivedirectoryname
+            tfile = tarfile.open(archivefilename, 'r:gz')
+            tfile.extractall('.')
+            # run xsltproc @TODO use list comprehension instead
+            for n in glob.glob(archivedirectoryname + "/*.nxml"):
+                nxmlfilepath = n
+            print nxmlfilepath
+            xsltcommand = "xsltproc jats-to-mediawiki.xsl " + shellquote(nxmlfilepath) + " > " + articlepmcid + ".mw.xml"
+            print xsltcommand
+            xsltprocess = subprocess.Popen(xsltcommand, stdout=subprocess.PIPE, shell=True)
+            (output, err) = xsltprocess.communicate()
+            print "Today is", output
+
 
     except KeyboardInterrupt:
         print "Killed script with keyboard interrupt, exiting..."
