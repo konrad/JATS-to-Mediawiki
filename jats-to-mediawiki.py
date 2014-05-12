@@ -127,7 +127,8 @@ def main():
             archivefilename = wget.filename_from_url(archivefileurl)
             urllib.urlretrieve(archivefileurl, archivefilename)
 
-             # For some reason, the the wget hangs and doesn't finish:
+             # @TODO For some reason, wget hangs and doesn't finish, using
+             # urllib.urlretrieve() instead for this for now.
 #            archivefile = wget.download(archivefileurl, wget.bar_thermometer)
 
             # open the archive
@@ -135,12 +136,13 @@ def main():
             print archivedirectoryname
             tfile = tarfile.open(archivefilename, 'r:gz')
             tfile.extractall('.')
-            # run xsltproc @TODO use list comprehension instead
+
+            # run xsltproc
+            # @TODO use list comprehension instead
             for n in glob.glob(archivedirectoryname + "/*.nxml"):
                 nxmlfilepath = n
             print nxmlfilepath
             xsltcommand = "xsltproc jats-to-mediawiki.xsl " + shellquote(nxmlfilepath) + " > " + articlepmcid + ".mw.xml"
-            print xsltcommand
             xsltprocess = subprocess.Popen(xsltcommand, stdout=subprocess.PIPE, shell=True)
             (output, err) = xsltprocess.communicate()
             print "XSLT output:", output
