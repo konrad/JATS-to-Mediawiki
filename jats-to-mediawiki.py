@@ -40,7 +40,8 @@ def main():
             # standard flags
             parser = argparse.ArgumentParser(description='Command-line interface to jats-to-mediawiki.xslt, a script to manage conversion of articles (documents) from JATS xml format to MediaWiki markup, based on DOI or PMCID')
             parser.add_argument('-t', '--tmpdir', default='tmp/', help='path to temporary directory for purposes of this script')
-            parser.add_argument('-x', '--xmlcatalogfiles', default='dtd/catalog-test-jats-v1.xml', help='path to xml catalog files for xsltproc')
+            parser.add_argument('-x', '--xmlcatalogfiles',
+            default='dtd/catalog-test-jats-v1.xml', help='path to xml catalog files for xsltproc')
 
             # includes arbitrarily long list of keywords, or an input file
             parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='path to input file', required=False)
@@ -70,8 +71,6 @@ def main():
         # De-duplicate by converting to set (unique) then back to list again
         articleids = list(set(articleids))
 
-        print articleids #debug
-
         # set environment variable for xsltproc and jats dtd
         try:
             cwd = to_unicode_or_bust(os.getcwd())
@@ -88,6 +87,7 @@ def main():
         except:
             print 'Unable to find or create temporary directory'
             sys.exit(-1)
+        # print "\n" + os.environ.get('XML_CATALOG_FILES') + "\n" #debug
 
         # separate DOIs and PMCIDs
         articledois = [i for i in articleids if re.match('^10*', i)]
@@ -113,7 +113,10 @@ def main():
         # De-duplicate with set to list conversion
         articlepmcids = list(set(articlepmcids))
 
-        # Main loop to grab the archive file, get the .nxml file, and convert
+        print "\nArticle IDs to convert:\n" #debug
+        print articlepmcids #debug
+
+       # Main loop to grab the archive file, get the .nxml file, and convert
         for articlepmcid in articlepmcids:
 
             # @TODO make flag an alternative to .tar.gz archive download
@@ -131,6 +134,7 @@ def main():
             archivefileurl = record.oa.records.record.find(format='tgz')['href']
 
             # download the file
+            print "\nDownloading file..."
             archivefilename = wget.filename_from_url(archivefileurl)
             urllib.urlretrieve(archivefileurl, archivefilename)
 
@@ -144,15 +148,20 @@ def main():
             tfile = tarfile.open(archivefilename, 'r:gz')
             tfile.extractall('.')
 
+
             # run xsltproc
             # @TODO use list comprehension instead
             for n in glob.glob(archivedirectoryname + "/*.nxml"):
                 nxmlfilepath = n
+            print "\nConverting... "
             print nxmlfilepath
-            xsltcommand = "xsltproc jats-to-mediawiki.xsl " + shellquote(nxmlfilepath) + " > " + articlepmcid + ".mw.xml"
+            xsltcommand = "xsltproc jats-to-mediawiki.xsl " + shellquote(cwd + "/" + nxmlfilepath) + " > " + articlepmcid + ".xml.mw"
             xsltprocess = subprocess.Popen(xsltcommand, stdout=subprocess.PIPE, shell=True)
+            print "\nReturning results..."
             (output, err) = xsltprocess.communicate()
-            print "XSLT output:", output
+            if output:
+                print "\nXSLT output..."
+                print output
 
 
     except KeyboardInterrupt:
