@@ -8,9 +8,29 @@ import tarfile
 import subprocess
 import glob
 
-# Helper function
+'''
+Helper functions
+'''
+
+# escape parentheses, @TODO may need to escape other characters
 def shellquote(s):
     return "'" + s.replace("(", "\(").replace(")", "\)") + "'"
+
+# Unicode handling
+# (decode to unicode early, use unicode everywhere, encode late to string such as when
+# writing to disk or print)
+
+# Use this function to decode early
+def to_unicode_or_bust( obj, encoding='utf-8-sig'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding)
+        return obj
+# use .encode('utf-8') to encode late
+
+'''
+Main function
+'''
 
 def main():
     try:
@@ -34,19 +54,6 @@ def main():
         except:
             print 'Unable to parse options, use the --help flag for usage information'
             sys.exit(-1)
-
-        '''
-        Unicode handling
-        (decode to unicode early, use unicode everywhere, encode late to string such as when
-        writing to disk or print)
-        '''
-        # Use this function to decode early
-        def to_unicode_or_bust( obj, encoding='utf-8-sig'):
-            if isinstance(obj, basestring):
-                if not isinstance(obj, unicode):
-                    obj = unicode(obj, encoding)
-                return obj
-        # use .encode('utf-8') to encode late
 
         # Handle and convert input values
         tmpdir = args.tmpdir
