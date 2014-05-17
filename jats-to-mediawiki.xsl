@@ -3,7 +3,8 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ex="http://exslt.org/dates-and-times"
-    xmlns:mml="http://www.w3.org/1998/Math/MathML"   
+    xmlns:mml="http://www.w3.org/1998/Math/MathML"
+    xmlns="http://www.mediawiki.org/xml/export-0.8/"
     extension-element-prefixes="ex"
     version="1.0">
 
@@ -37,7 +38,6 @@
         
         <!-- Start MediaWiki document -->
         <xsl:element  name="mediawiki">
-            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.8/</xsl:attribute>
             <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd</xsl:attribute>
             <xsl:attribute name="version">0.8</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
