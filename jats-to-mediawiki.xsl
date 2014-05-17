@@ -306,10 +306,8 @@
         <xsl:text>'''</xsl:text>
     </xsl:template>    
 
-<!-- Eliminates newline to replace <br/> tag, causes mediawiki to generate additional newlines and render as breaks -->
-    <xsl:template match="break">&amp;lt;br/&amp;gt;</xsl:template>
-<!-- TODO: consider switching break tags for new line characters, as mediawiki will render these as break tags -->
-<!--    <xsl:text>&amp;#xA;</xsl:text> -->
+<!-- Replaces <br/> tag with newline character, to be rendered by mediawiki  -->
+    <xsl:template match="break">&amp;#xA;</xsl:template>
     
     <xsl:template match="underline">
         <span style="text-decoration: underline;"><xsl:apply-templates/></span>
