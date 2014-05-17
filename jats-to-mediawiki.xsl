@@ -307,7 +307,6 @@
     </xsl:template>    
 
     <xsl:template match="break">
-        &amp;lt;br/&amp;gt;
     </xsl:template>
     
     <xsl:template match="underline">
