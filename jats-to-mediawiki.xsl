@@ -310,7 +310,7 @@
     <xsl:template match="break">&amp;#xA;</xsl:template>
     
     <xsl:template match="underline">
-        <span style="text-decoration: underline;"><xsl:apply-templates/></span>
+        &amp;lt;span style="text-decoration: underline;"&amp;gt;<xsl:apply-templates/>&amp;lt;/span&amp;gt;
     </xsl:template>
     <xsl:template match="underline-start">
         <!-- double-escape the entity refs so the resulting XML contains '&lt;' instead of '<' and therefore remains well-formed -->
