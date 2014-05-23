@@ -1131,7 +1131,14 @@
             <xsl:text>}}</xsl:text>
         </xsl:if>
     </xsl:template>
-    
+
+    <xsl:template match='text()[substring(., string-length(.), 1) = "[" and following-sibling::*[1][self::xref]]'>
+      <xsl:value-of select='substring(., 1, string-length(.) - 1)'/>
+    </xsl:template>
+    <xsl:template match='text()[substring(., 1, 1) = "]" and preceding-sibling::*[1][self::xref]]'>
+      <xsl:value-of select='substring(., 2)'/>
+    </xsl:template>
+  
     <!-- TODO: include table-wrap-foot -->
 
 
