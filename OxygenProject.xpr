@@ -10,6 +10,21 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
+                                    <String>articles/Zookeys_2013_Aug_15_(324)_1-83/ZooKeys-324-001.nxml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>jats-to-mediawiki</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
                                     <String>articles/Retrovirology_2005_Feb_22_2_11/1742-4690-2-11.nxml</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -120,7 +135,7 @@
                                     <String-array/>
                                 </field>
                                 <field name="xslTransformer">
-                                    <String>Saxon6.5.5</String>
+                                    <String>Xsltproc</String>
                                 </field>
                                 <field name="extensionURLs">
                                     <String-array/>

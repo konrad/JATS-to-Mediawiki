@@ -3,8 +3,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ex="http://exslt.org/dates-and-times"
+    xmlns:str="http://exslt.org/strings"
     xmlns:mml="http://www.w3.org/1998/Math/MathML"   
-    extension-element-prefixes="ex"
+    extension-element-prefixes="ex str"
     version="1.0">
 
     <xsl:import href="lib/serialize.xsl"/>
@@ -378,11 +379,13 @@
     <!-- Note on <email>: "If both a textual phrase (“the Moody Institute’s email address”) and a mailto URL are required, the <ext-link> element should be used."
          (http://jats.nlm.nih.gov/archiving/tag-library/0.4/index.html?elem=email) -->
     <xsl:template match="ext-link|uri|self-uri">
+        <xsl:variable name='href'
+          select='str:replace(str:replace(@xlink:href, "&lt;", "%3C"), "&gt;", "%3E")'/>
         <xsl:choose>
             <!-- test for internal link -->
-            <xsl:when test="contains(@xlink:href, $wikiLinkBase1)">
+            <xsl:when test="contains($href, $wikiLinkBase1)">
                 <xsl:text>[[</xsl:text>
-                <xsl:value-of select="translate(substring-after(@xlink:href, $wikiLinkBase1), '_', ' ')"/>
+                <xsl:value-of select="translate(substring-after($href, $wikiLinkBase1), '_', ' ')"/>
                 <xsl:text>|</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@xlink:title">
@@ -394,9 +397,9 @@
                 </xsl:choose>
                 <xsl:text>]]</xsl:text>
             </xsl:when>
-            <xsl:when test="contains(@xlink:href, $wikiLinkBase2)">
+            <xsl:when test="contains($href, $wikiLinkBase2)">
                 <xsl:text>[[</xsl:text>
-                <xsl:value-of select="translate(substring-after(@xlink:href, $wikiLinkBase2), '_', ' ')"/>
+                <xsl:value-of select="translate(substring-after($href, $wikiLinkBase2), '_', ' ')"/>
                 <xsl:text>|</xsl:text>
                 <xsl:choose>
                     <xsl:when test="@xlink:title">
@@ -410,7 +413,7 @@
             </xsl:when>
             <xsl:otherwise> <!-- external link -->
                 <xsl:text>[</xsl:text>
-                <xsl:value-of select="@xlink:href"/>
+                <xsl:value-of select="$href"/>
                 <xsl:text> </xsl:text>
                 <xsl:choose>
                     <xsl:when test="@xlink:title">
