@@ -106,8 +106,8 @@
             http://en.wikisource.org/wiki/Template:Header, which specifies that unused template parameters
             should *NOT* be removed -->
         <xsl:text>{{header&#xA;    | title      = </xsl:text>
-        <xsl:apply-templates select="article-meta//article-title[1]"/>
-        <xsl:for-each select="article-meta//subtitle">
+        <xsl:apply-templates select="article-meta/title-group/article-title[1]"/>
+        <xsl:for-each select="article-meta/title-group/subtitle">
             <xsl:text>: </xsl:text>
             <xsl:value-of select="."/>
         </xsl:for-each>

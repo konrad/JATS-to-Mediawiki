@@ -10,7 +10,7 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>articles/PLoS_Biol_2004_Jul_13_2(7)_e207/pbio.0020207.nxml</String>
+                                    <String>articles/PLoS_Biol_2010_Jul_27_8(7)_e1000436/pbio.1000436.nxml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -26,6 +26,36 @@
                             <scenarioAssociation>
                                 <field name="url">
                                     <String>articles/Zookeys_2013_Aug_15_(324)_1-83/ZooKeys-324-001.nxml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>jats-to-mediawiki</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>articles/Zookeys_2013_Aug_15_(324)_1-83/ZooKeys-324-001.indented.nxml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>jats-to-mediawiki</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>articles/PLoS_Biol_2004_Jul_13_2(7)_e207/pbio.0020207.nxml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
