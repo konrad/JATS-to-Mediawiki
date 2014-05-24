@@ -105,14 +105,13 @@
         <!-- Per Wikisource policy, all articles must begin with a populated header as defined in
             http://en.wikisource.org/wiki/Template:Header, which specifies that unused template parameters
             should *NOT* be removed -->
-        <xsl:text>{{header
-    | title      = </xsl:text><xsl:apply-templates select="article-meta//article-title[1]"/>
+        <xsl:text>{{header&#xA;    | title      = </xsl:text>
+        <xsl:apply-templates select="article-meta//article-title[1]"/>
         <xsl:for-each select="article-meta//subtitle">
             <xsl:text>: </xsl:text>
             <xsl:value-of select="."/>
         </xsl:for-each>
-        <xsl:text>
-    | author     = </xsl:text>
+        <xsl:text>&#xA;    | author     = </xsl:text>
         <!-- Wikisource header template auto-links authors but does not support multple authors;
         If we have more than one, we must manually turn off wikilinking, since it will try to link
         to one enrtry whose title is the combined names. -->
@@ -122,78 +121,51 @@
         <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'a')]" mode="headerTemplateContrib">
             <xsl:with-param name="stem">a</xsl:with-param>     
         </xsl:apply-templates>
-        <xsl:text>
-    | editor = </xsl:text>
+        <xsl:text>&#xA;    | editor = </xsl:text>
         <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'e')]" mode="headerTemplateContrib">
             <xsl:with-param name="stem">e</xsl:with-param>     
         </xsl:apply-templates>        
-        <xsl:text>
-    | translator = </xsl:text>
+        <xsl:text>&#xA;    | translator = </xsl:text>
         <xsl:apply-templates select="article-meta/contrib-group/contrib[starts-with(@contrib-type, 'tran')]" mode="headerTemplateContrib">
             <xsl:with-param name="stem">a</xsl:with-param>     
         </xsl:apply-templates>
-        <xsl:text>
-    | section    = </xsl:text>
+        <xsl:text>&#xA;    | section    = </xsl:text>
         <xsl:call-template name="journalCitation"/>
-        <xsl:text>
-    | contributor= </xsl:text>
+        <xsl:text>&#xA;    | contributor= </xsl:text>
         <xsl:apply-templates select="article-meta/contrib-group/contrib[not(starts-with(@contrib-type, 'a')) and not(starts-with(@contrib-type, 'e')) and not(starts-with(@contrib-type, 'tran'))]" mode="headerTemplateContrib">
             <xsl:with-param name="stem">a</xsl:with-param>     
         </xsl:apply-templates>
-        <xsl:text>
-    | previous   = </xsl:text>
-        <xsl:text>
-    | next       = </xsl:text>
-        <xsl:text>
-    | year       = </xsl:text>
+        <xsl:text>&#xA;    | previous   = </xsl:text>
+        <xsl:text>&#xA;    | next       = </xsl:text>
+        <xsl:text>&#xA;    | year       = </xsl:text>
         <!-- There could be several pub-dates based on @pub-type, but since that attribute does not
             have a controlled vocabulary, trying to perform logic on it is perilous -->
         <xsl:value-of select="article-meta/pub-date[1]/year"/>
-        <xsl:text>
-    | edition     = </xsl:text>
-        <xsl:text>
-    | categories     = </xsl:text>
+        <xsl:text>&#xA;    | edition     = </xsl:text>
+        <xsl:text>&#xA;    | categories     = </xsl:text>
         <xsl:for-each select="article-meta//subject">
             <xsl:value-of select="."/>
             <xsl:if test="position()!=last()">
                 <xsl:text> / </xsl:text>
             </xsl:if>
         </xsl:for-each>
-        <xsl:text>
-    | shortcut     = </xsl:text>
-        <xsl:text>
-    | portal     = </xsl:text>
-        <xsl:text>
-    | wikipedia  = </xsl:text>
-        <xsl:text>
-    | commons    = </xsl:text>
-        <xsl:text>
-    | commonscat = </xsl:text>
-        <xsl:text>
-    | wikiquote  = </xsl:text>
-        <xsl:text>
-    | wikinews   = </xsl:text>
-        <xsl:text>
-    | wiktionary = </xsl:text>
-        <xsl:text>
-    | wikibooks  = </xsl:text>
-        <xsl:text>
-    | wikiversity= </xsl:text>
-        <xsl:text>
-    | wikispecies= </xsl:text>
-        <xsl:text>
-    | wikivoyage = </xsl:text>
-        <xsl:text>
-    | wikidata   = </xsl:text>
-        <xsl:text>
-    | wikilivres = </xsl:text>
-        <xsl:text>
-    | meta       = </xsl:text>
-        <xsl:text>
-    | notes      = </xsl:text>
-        <xsl:text>
-}}
-</xsl:text>
+        <xsl:text>&#xA;    | shortcut     = </xsl:text>
+        <xsl:text>&#xA;    | portal     = </xsl:text>
+        <xsl:text>&#xA;    | wikipedia  = </xsl:text>
+        <xsl:text>&#xA;    | commons    = </xsl:text>
+        <xsl:text>&#xA;    | commonscat = </xsl:text>
+        <xsl:text>&#xA;    | wikiquote  = </xsl:text>
+        <xsl:text>&#xA;    | wikinews   = </xsl:text>
+        <xsl:text>&#xA;    | wiktionary = </xsl:text>
+        <xsl:text>&#xA;    | wikibooks  = </xsl:text>
+        <xsl:text>&#xA;    | wikiversity= </xsl:text>
+        <xsl:text>&#xA;    | wikispecies= </xsl:text>
+        <xsl:text>&#xA;    | wikivoyage = </xsl:text>
+        <xsl:text>&#xA;    | wikidata   = </xsl:text>
+        <xsl:text>&#xA;    | wikilivres = </xsl:text>
+        <xsl:text>&#xA;    | meta       = </xsl:text>
+        <xsl:text>&#xA;    | notes      = </xsl:text>
+        <xsl:text>&#xA;}}&#xA;</xsl:text>
     </xsl:template>
 
     <xsl:template match="contrib" mode="headerTemplateContrib">
@@ -260,8 +232,7 @@
 
     <xsl:template match="abstract">
         <xsl:text>==Abstract==</xsl:text>
-        <xsl:text>
-</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -281,12 +252,8 @@
     </xsl:template>
 
     <xsl:template match="sec/p">
-        <!-- newline for legibility
-          [CFM] Also, need an extra newline between paragraphs in wiki markup.          
-        -->
-        <xsl:text>
-
-</xsl:text>
+        <!-- extra newline between paragraphs in wiki markup. -->
+        <xsl:text>&#xA;&#xA;</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
@@ -434,14 +401,12 @@
     <xsl:template name="CreateHeading">
         <!-- context is <sec> -->
         <!-- newline for legibility -->
-        <xsl:text>
-</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
         <xsl:call-template name="CreateHeadingTag"/>
         <xsl:value-of select="title"/>
         <xsl:call-template name="CreateHeadingTag"/>
         <!-- newline for legibility -->
-        <xsl:text>            
-</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
         </xsl:template>
     
     <!-- Determine depth of current sec to format wiki heading to same depth -->
@@ -637,9 +602,7 @@
     <xsl:template match="table-wrap">
         <xsl:if test="label">
             <!-- create section heading for table itself, at the level of the parent <sec> +1 -->
-            <!-- newline-->
-            <xsl:text>
-</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
             <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
             <xsl:apply-templates select="label" mode="table-wrap"/>
             <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
@@ -647,9 +610,7 @@
         
         <!-- TODO: is there a better way to format this? -->
         <xsl:if test="caption|object-id">
-            <!-- newline-->
-            <xsl:text>
-</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
             <xsl:text>:"</xsl:text>
             <xsl:apply-templates select="caption" mode="table-wrap"/>
             <xsl:apply-templates select="object-id" mode="table-wrap"/>
@@ -749,8 +710,7 @@
     <!-- The footnotes themselves -->
     <xsl:template match="ref-list">
         <!-- header tag -->
-        <xsl:text>
-== </xsl:text>
+        <xsl:text>&#xA;== </xsl:text>
         <xsl:choose>
             <xsl:when test="title!=''">
                 <xsl:value-of select="title"/>
@@ -759,8 +719,7 @@
                 <xsl:text>References</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:text> ==
-</xsl:text>
+        <xsl:text> ==&#xA;</xsl:text>
         <xsl:text>&lt;references&gt;</xsl:text>
             <xsl:apply-templates/>
         <xsl:text>&lt;/references&gt;</xsl:text>
@@ -785,8 +744,7 @@
             <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$refID"/><xsl:text>"&gt;</xsl:text>
                 <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
                 <xsl:text>&lt;/ref&gt;</xsl:text>
-            <xsl:text> <!-- newline -->
-</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
         </xsl:if>   
     </xsl:template>
     
@@ -795,8 +753,7 @@
             to parse JATS/NLM attributes such as @publication-type or @citation-type, since any text value is permitted
             in those attributes. -->
     <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
-        <xsl:text>{{Citation
-</xsl:text>
+        <xsl:text>{{Citation&#xA;</xsl:text>
         <!-- TODO: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
         <xsl:for-each select="string-name|person-group/string-name">
             <xsl:text>| author</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
@@ -805,50 +762,42 @@
         <xsl:for-each select="name|person-group/name">
             <xsl:text>| last</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
             <xsl:value-of select="surname"/>
-            <xsl:text>
-</xsl:text>
+            <xsl:text>&#xA;</xsl:text>
             <xsl:text>| first</xsl:text><xsl:value-of select="position()"/><xsl:text> = </xsl:text>
             <xsl:value-of select="given-names"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:for-each>
         <xsl:for-each select="descendant::collab">
             <xsl:text>| coauthors = </xsl:text>
             <xsl:value-of select="."/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:for-each>
         <!-- PUBLICATION DATES : be careful not to get other dates that can appear in citations, which use same tags-->
         <xsl:if test="year|date/year">
             <xsl:text>| year = </xsl:text>
             <xsl:value-of select="year|date/year"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="month|date/month">
             <xsl:text>| month = </xsl:text>
             <xsl:value-of select="month|date/month"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="string-date">
             <xsl:text>| date = </xsl:text>
             <xsl:value-of select="string-date"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <!-- OTHER DATES -->
         <xsl:for-each select="date-in-citation[contains(@content-type, 'access|stamp')]|access-date|time-stamp">
             <xsl:text>| accessdate = </xsl:text>
             <xsl:value-of select="."/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:for-each>
         <xsl:for-each select="date-in-citation[contains(@content-type, 'copyright')]">
             <xsl:text>| origyear = </xsl:text>
             <xsl:value-of select="."/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:for-each>
         <!-- TITLE -->
         <xsl:choose>
@@ -856,79 +805,67 @@
             <xsl:when test="article-title">
                 <xsl:text>| title = </xsl:text>
                 <xsl:apply-templates select="article-title"/>
-                <xsl:text>
-</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
                 <xsl:if test="source">
                     <xsl:text>| work = </xsl:text>
                     <xsl:apply-templates select="source"/>
-                    <xsl:text>
-</xsl:text> 
+                    <xsl:text>&#xA;</xsl:text> 
                 </xsl:if>
                 <xsl:if test="trans-title">
                     <xsl:text>| trans_title = </xsl:text>
                     <xsl:apply-templates select="trans-title"/>
-                    <xsl:text>
-</xsl:text> 
+                    <xsl:text>&#xA;</xsl:text> 
                 </xsl:if>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:if test="source">
                     <xsl:text>| title = </xsl:text>
                     <xsl:apply-templates select="source"/>
-                    <xsl:text>
-</xsl:text> 
+                    <xsl:text>&#xA;</xsl:text> 
                 </xsl:if>
                 <xsl:if test="trans-source">
                     <xsl:text>| trans_title = </xsl:text>
                     <xsl:apply-templates select="trans-title"/>
-                    <xsl:text>
-</xsl:text> 
+                    <xsl:text>&#xA;</xsl:text> 
                 </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="chapter-title">
             <xsl:text>| chapter = </xsl:text>
             <xsl:apply-templates select="chapter"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         
         <!-- ISSUE -->
         <xsl:if test="issue">
             <xsl:text>| issue = </xsl:text>
             <xsl:apply-templates select="issue"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="volume">
             <xsl:text>| volume = </xsl:text>
             <xsl:apply-templates select="volume"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="publisher-name">
             <xsl:text>| publisher = </xsl:text>
             <xsl:apply-templates select="publisher-name"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="publisher-loc">
             <xsl:text>| location = </xsl:text>
             <xsl:apply-templates select="publisher-loc"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>        
         <xsl:if test="series">
             <xsl:text>| series = </xsl:text>
             <xsl:apply-templates select="series"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         <xsl:if test="edition">
             <xsl:text>| edition = </xsl:text>
             <xsl:apply-templates select="edition"/>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         
         <!-- LANGUAGES -->
@@ -945,8 +882,7 @@
                     <xsl:value-of select="source/@xml:lang!=''"/>
                 </xsl:when>
             </xsl:choose>
-            <xsl:text>
-</xsl:text> 
+            <xsl:text>&#xA;</xsl:text> 
         </xsl:if>
         
         <!-- PAGES -->
@@ -954,26 +890,22 @@
             <xsl:when test="page-range">
                 <xsl:text>| pages = </xsl:text>
                 <xsl:apply-templates select="page-range"/>
-                <xsl:text>
-</xsl:text>                
+                <xsl:text>&#xA;</xsl:text>                
             </xsl:when>
             <xsl:when test="fpage and lpage">
                 <xsl:text>| pages = </xsl:text>
                 <xsl:value-of select="fpage"/><xsl:text>–</xsl:text><xsl:value-of select="lpage"/>
-                <xsl:text>
-</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
             </xsl:when>                
             <xsl:when test="fpage and not(lpage)">
                 <xsl:text>| page = </xsl:text>
                 <xsl:apply-templates select="fpage"/>
-                <xsl:text>
-</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
             </xsl:when>
             <xsl:when test="elocation-id">
                 <xsl:text>| at = </xsl:text>
                 <xsl:apply-templates select="elocation-id"/>
-                <xsl:text>
-</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
             </xsl:when>
         </xsl:choose>
 
@@ -982,21 +914,18 @@
             <xsl:when test="@xlink:href">
                 <xsl:text>| url = </xsl:text>
                 <xsl:apply-templates select="@xlink:href"/>
-                <xsl:text>
-</xsl:text>            
+                <xsl:text>&#xA;</xsl:text>            
             </xsl:when>
             <!-- Avoid redundancy with specific ID fields below-->
             <xsl:when test="ext-link[not(@ext-link-type='doi|pmcid|pmid')]">
                 <xsl:text>| url = </xsl:text>
                 <xsl:apply-templates select="ext-link"/>
-                <xsl:text>
-</xsl:text>     
+                <xsl:text>&#xA;</xsl:text>     
             </xsl:when>
             <xsl:when test="uri">
                 <xsl:text>| url = </xsl:text>
                 <xsl:apply-templates select="uri"/>
-                <xsl:text>
-</xsl:text>
+                <xsl:text>&#xA;</xsl:text>
             </xsl:when>
         </xsl:choose>
         
@@ -1004,28 +933,24 @@
         <xsl:if test="issn">
             <xsl:text>| issn = </xsl:text>
             <xsl:apply-templates select="issn"/>
-            <xsl:text>
-</xsl:text>            
+            <xsl:text>&#xA;</xsl:text>            
         </xsl:if>
         <xsl:if test="isbn">
             <xsl:text>| isbn = </xsl:text>
             <xsl:apply-templates select="isbn"/>
-            <xsl:text>
-</xsl:text>            
+            <xsl:text>&#xA;</xsl:text>            
         </xsl:if>
         <xsl:choose>
             <xsl:when test="pub-id[@pub-id-type='doi']">
                 <xsl:text>| doi = </xsl:text>
                 <xsl:apply-templates select="pub-id[@pub-id-type='doi']"/>
-                <xsl:text>
-</xsl:text>            
+                <xsl:text>&#xA;</xsl:text>            
                 
             </xsl:when>
             <xsl:when test="ext-link[@ext-link-type='doi']">
                 <xsl:text>| doi = </xsl:text>
                 <xsl:apply-templates select="ext-link[@ext-link-type='doi']"/>
-                <xsl:text>
-</xsl:text>            
+                <xsl:text>&#xA;</xsl:text>            
             </xsl:when>
         </xsl:choose>
         
@@ -1033,14 +958,12 @@
             <xsl:when test="pub-id[@pub-id-type='pmcid']">
                 <xsl:text>| pmc = </xsl:text>
                 <xsl:apply-templates select="pub-id[@pub-id-type='pmcid']"/>
-                <xsl:text>
-</xsl:text>     
+                <xsl:text>&#xA;</xsl:text>     
             </xsl:when>
             <xsl:when test="ext-link[@ext-link-type='pmcid']">
                 <xsl:text>| pmc = </xsl:text>
                 <xsl:apply-templates select="ext-link[@ext-link-type='pmcid']"/>
-                <xsl:text>
-</xsl:text>            
+                <xsl:text>&#xA;</xsl:text>            
             </xsl:when>
         </xsl:choose>
         
@@ -1048,14 +971,12 @@
             <xsl:when test="pub-id[@pub-id-type='pmid']">
                 <xsl:text>| pmid = </xsl:text>
                 <xsl:apply-templates select="pub-id[@pub-id-type='pmid']"/>
-                <xsl:text>
-</xsl:text>     
+                <xsl:text>&#xA;</xsl:text>     
             </xsl:when>
             <xsl:when test="ext-link[@ext-link-type='pmid']">
                 <xsl:text>| pmid = </xsl:text>
                 <xsl:apply-templates select="ext-link[@ext-link-type='pmid']"/>
-                <xsl:text>
-</xsl:text>            
+                <xsl:text>&#xA;</xsl:text>            
             </xsl:when>
         </xsl:choose>
         
@@ -1063,16 +984,14 @@
         <xsl:if test="pub-id[not(@pub-id-type='doi|pmcid|pmid')]">
             <xsl:text>| id = </xsl:text>
             <xsl:apply-templates select="pub-id"/>
-            <xsl:text>
-</xsl:text>     
+            <xsl:text>&#xA;</xsl:text>     
         </xsl:if>
         
         <!-- MISCELLANIA -->
         <xsl:if test="patent">
             <xsl:text>| patent-number = </xsl:text>
             <xsl:apply-templates select="patent"/>
-            <xsl:text>
-</xsl:text>     
+            <xsl:text>&#xA;</xsl:text>     
         </xsl:if>
         
         <!-- UNFORMATTED CITATION BITS 
@@ -1088,9 +1007,7 @@
         <xsl:apply-templates select="*[not(self::string-name|self::person-group|self::date|self::year|self::month|self::string-date|self::date-in-citation|self::article-title|self::source|self::trans-title|self::trans-source|self::chapter-title|self::issue|self::volume|self::publisher-name|self::publisher-loc|self::series|self::edition|self::page-range|self::fpage|self::lpage|self::elocation-id|self::ext-link|self::uri|self::issn|self::isbn|self::pub-id|self::patent)]"/>
 
         <!-- close citations block -->
-        <xsl:text>
-}}
-</xsl:text>
+        <xsl:text>&#xA;}}&#xA;</xsl:text>
     </xsl:template>
 
     
@@ -1116,8 +1033,7 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:if test="$licenseURI">
-            <xsl:text>
-{{</xsl:text>
+            <xsl:text>&#xA;{{</xsl:text>
             <!-- attempt to match the URI to an appropriate template -->
             <xsl:choose>
                 <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/2.0')">CC-BY-2.0</xsl:when>
