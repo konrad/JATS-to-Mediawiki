@@ -679,22 +679,20 @@
     
 
     <xsl:template match="supplementary-material">
-        <xsl:text>
-</xsl:text>
+        <xsl:text>&#xA;</xsl:text>
         <xsl:call-template name="CreateHeadingTag"/><xsl:text>=</xsl:text>
         <xsl:choose>
             <xsl:when test="label!=''">
                 <xsl:value-of select="label"/>
             </xsl:when>
             <xsl:when test="caption/title!=''">
-                <xsl:value-of select="caption/title"/>
+                <xsl:value-of select="normalize-space(caption/title)"/>
             </xsl:when>
             <xsl:otherwise>
                 <xsl:text>Supplemental file</xsl:text>
             </xsl:otherwise>
         </xsl:choose>
-        <xsl:call-template name="CreateHeadingTag"/><xsl:text>=
-</xsl:text>
+        <xsl:call-template name="CreateHeadingTag"/><xsl:text>=&#xA;</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
