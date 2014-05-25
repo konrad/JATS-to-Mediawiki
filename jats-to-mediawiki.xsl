@@ -80,7 +80,9 @@
                         <xsl:apply-templates select="front"/>
                         <xsl:apply-templates select="front/article-meta/abstract"/>
                         <xsl:apply-templates select="body"/>
-                        <xsl:apply-templates select="back"/>
+                        <!-- reference list should come last -->
+                        <xsl:apply-templates select="back/*[not(self::ref-list)]"/>
+                        <xsl:apply-templates select="back/ref-list"/>
                         <xsl:apply-templates select="front/article-meta//license"/>
                     </xsl:element>
                     
@@ -244,11 +246,11 @@
     -->    
     </xsl:template>
     
-    <xsl:template match="sec">
+    <xsl:template match="sec|ack|app">
         <xsl:if test="title!=''">
              <xsl:call-template name="CreateHeading"/>
         </xsl:if>
-        <xsl:apply-templates/>
+        <xsl:apply-templates select='*[not(self::title)]'/>
     </xsl:template>
 
     <xsl:template match="sec/p">
@@ -412,7 +414,8 @@
     <!-- Determine depth of current sec to format wiki heading to same depth -->
     <xsl:template name="CreateHeadingTag">
         <xsl:text>=</xsl:text> <!-- Start at level 2 (level 1 is article title) -->
-        <xsl:for-each select="ancestor-or-self::sec|ancestor-or-self::label[parent::table-wrap]|ancestor::abstract">
+        <xsl:for-each select="ancestor-or-self::sec|ancestor-or-self::app|ancestor-or-self::ack|
+                              ancestor-or-self::label[parent::table-wrap]|ancestor::abstract">
             <xsl:text>=</xsl:text>
         </xsl:for-each>
     </xsl:template>
@@ -721,7 +724,7 @@
         </xsl:choose>
         <xsl:text> ==&#xA;</xsl:text>
         <xsl:text>&lt;references&gt;</xsl:text>
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="*[not(self::title)]"/>
         <xsl:text>&lt;/references&gt;</xsl:text>
     </xsl:template>
     
