@@ -4,7 +4,8 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ex="http://exslt.org/dates-and-times"
     xmlns:str="http://exslt.org/strings"
-    xmlns:mml="http://www.w3.org/1998/Math/MathML"   
+    xmlns:mml="http://www.w3.org/1998/Math/MathML"
+    xmlns="http://www.mediawiki.org/xml/export-0.8/"
     extension-element-prefixes="ex str"
     version="1.0">
 
@@ -38,7 +39,6 @@
         
         <!-- Start MediaWiki document -->
         <xsl:element  name="mediawiki">
-            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.8/</xsl:attribute>
             <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd</xsl:attribute>
             <xsl:attribute name="version">0.8</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
@@ -280,7 +280,7 @@
     <xsl:template match="break">&amp;#xA;</xsl:template>
     
     <xsl:template match="underline">
-        <span style="text-decoration: underline;"><xsl:apply-templates/></span>
+        &amp;lt;span style="text-decoration: underline;"&amp;gt;<xsl:apply-templates/>&amp;lt;/span&amp;gt;
     </xsl:template>
     <xsl:template match="underline-start">
         <!-- double-escape the entity refs so the resulting XML contains '&lt;' instead of '<' and therefore remains well-formed -->
