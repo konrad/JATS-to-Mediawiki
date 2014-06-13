@@ -5,16 +5,12 @@ from bs4 import BeautifulSoup
 import wget
 import urllib
 import tarfile
-import subprocess
+from subprocess import call
 import glob
 
 '''
 Helper functions
 '''
-
-# escape parentheses, @TODO may need to escape other characters
-def shellquote(s):
-    return "'" + s.replace("(", "\(").replace(")", "\)") + "'"
 
 # Unicode handling
 # (decode to unicode early, use unicode everywhere, encode late to string such as when
@@ -116,7 +112,7 @@ def main():
         print "\nArticle IDs to convert:\n" #debug
         print articlepmcids #debug
 
-       # Main loop to grab the archive file, get the .nxml file, and convert
+        # Main loop to grab the archive file, get the .nxml file, and convert
         for articlepmcid in articlepmcids:
 
             # @TODO make flag an alternative to .tar.gz archive download
@@ -155,14 +151,15 @@ def main():
                 nxmlfilepath = n
             print "\nConverting... "
             print nxmlfilepath
-            xsltcommand = "xsltproc jats-to-mediawiki.xsl " + shellquote(cwd + "/" + nxmlfilepath) + " > " + articlepmcid + ".xml.mw"
-            xsltprocess = subprocess.Popen(xsltcommand, stdout=subprocess.PIPE, shell=True)
+            fullnxmlfilepath = cwd + "/" + nxmlfilepath
+            xsltoutputfile = open(articlepmcid + ".xml.mw", 'w')
+            xsltcommand = call(['xsltproc', 'jats-to-mediawiki.xsl', fullnxmlfilepath], stdout=xsltoutputfile)
             print "\nReturning results..."
-            (output, err) = xsltprocess.communicate()
-            if output:
-                print "\nXSLT output..."
-                print output
-
+            if xsltcommand == 0:
+                print xsltoutputfile.name + "\n"
+            else:
+                print "xslt conversion: failure"
+                sys.exit(-1)
 
     except KeyboardInterrupt:
         print "Killed script with keyboard interrupt, exiting..."
