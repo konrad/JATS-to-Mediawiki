@@ -1052,13 +1052,25 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template match='text()[substring(., string-length(.), 1) = "[" and following-sibling::*[1][self::xref]]'>
-      <xsl:value-of select='substring(., 1, string-length(.) - 1)'/>
+    <!-- Fix #12 - special cases with brackets around xrefs.  They must be removed. -->
+    <xsl:template priority='2'
+                  match='text()[substring(., 1, 1) = "]" and 
+                                preceding-sibling::*[1][self::xref] and
+                                substring(., string-length(.), 1) = "[" and
+                                following-sibling::*[1][self::xref]]'>
+        <xsl:value-of select='substring(., 2, string-length(.) - 2)'/>
     </xsl:template>
-    <xsl:template match='text()[substring(., 1, 1) = "]" and preceding-sibling::*[1][self::xref]]'>
-      <xsl:value-of select='substring(., 2)'/>
+    <xsl:template priority='1'
+                  match='text()[substring(., 1, 1) = "]" and 
+                                preceding-sibling::*[1][self::xref]]'>
+        <xsl:value-of select='substring(., 2)'/>
     </xsl:template>
-  
+    <xsl:template priority='1'
+                  match='text()[substring(., string-length(.), 1) = "[" and 
+                                following-sibling::*[1][self::xref]]'>
+        <xsl:value-of select='substring(., 1, string-length(.) - 2)'/>
+    </xsl:template>
+    
     <!-- TODO: include table-wrap-foot -->
 
 
