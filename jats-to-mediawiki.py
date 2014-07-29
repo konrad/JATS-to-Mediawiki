@@ -70,7 +70,10 @@ def main():
         # set environment variable for xsltproc and jats dtd
         try:
             cwd = to_unicode_or_bust(os.getcwd())
-            os.environ["XML_CATALOG_FILES"] = cwd + to_unicode_or_bust("/") + to_unicode_or_bust(xmlcatalogfiles)
+            if xmlcatalogfiles.startswith("/"):
+                os.environ["XML_CATALOG_FILES"] = xmlcatalogfiles
+            else:
+                os.environ["XML_CATALOG_FILES"] = cwd + to_unicode_or_bust("/") + to_unicode_or_bust(xmlcatalogfiles)
         except:
             print 'Unable to set XML_CATALOG_FILES environment variable'
             sys.exit(-1)
