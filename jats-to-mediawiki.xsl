@@ -810,7 +810,7 @@
                 <xsl:apply-templates select="article-title"/>
                 <xsl:text>&#xA;</xsl:text>
                 <xsl:if test="source">
-                    <xsl:text>| work = </xsl:text>
+                    <xsl:text>| journal = </xsl:text>
                     <xsl:apply-templates select="source"/>
                     <xsl:text>&#xA;</xsl:text> 
                 </xsl:if>
