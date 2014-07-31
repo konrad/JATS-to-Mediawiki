@@ -257,6 +257,17 @@
         <!-- extra newline between paragraphs in wiki markup. -->
         <xsl:text>&#xA;&#xA;</xsl:text>
         <xsl:apply-templates/>
+        
+        <!-- See issue #23.  This should handle figures that are referenced from the text, but that
+          appear inside <floats-group> at the end of the article.  Only process them the first time
+          they are referenced. -->
+        <xsl:for-each select='xref[@ref-type="fig"]'>
+            <xsl:variable name='rid' select='@rid'/>
+            <xsl:if test='not(preceding::xref[@ref-type="fig" and @rid=$rid]) and
+                          //floats-group/fig[@id=$rid]'>
+                <xsl:apply-templates select='//fig[@id=$rid]'/>
+            </xsl:if>
+        </xsl:for-each>
     </xsl:template>
 
     
@@ -548,27 +559,12 @@
     <!--  TABLES                                                       -->
     <!-- ============================================================= -->
     <!--  
-      Tables are already in XHTML, and can simply be copied
-      through.
-      [CFM]  Actually, it looks like tables need to be copied into the output
+      Tables are already in XHTML, and need to be copied into the output
       as escaped markup.  See github issue #6.
     -->
     
     <xsl:template match="table | tr | th | td">
         <xsl:apply-templates select='.' mode='serialize'/>
-      <!--
-        <xsl:copy>
-            <xsl:apply-templates select="@*" mode="table-copy"/>
-            <xsl:if test="name()='table'">
-                <xsl:if test="not(@border)">
-                    <xsl:attribute name="border">
-                        <xsl:value-of select="$tableBorder"/>
-                    </xsl:attribute>
-                </xsl:if>
-            </xsl:if>
-            <xsl:apply-templates/>
-        </xsl:copy>
-      -->
     </xsl:template>
   
     <!-- not supported in WikiMedia; any formatting included here is lost -->
@@ -1070,7 +1066,7 @@
                                 following-sibling::*[1][self::xref]]'>
         <xsl:value-of select='substring(., 1, string-length(.) - 2)'/>
     </xsl:template>
-    
+
     <!-- TODO: include table-wrap-foot -->
 
 

@@ -57,31 +57,20 @@ Fork this repository to add new scripts, then submit a 'pull request'.
 
 ### Manual
 
-#### Set up environment
-```
-# Check for xsltproc, will warn if not installed
-command -v xsltprocfoo >/dev/null 2>&1 || { echo >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+Depends on `xsltproc`.  To see if it exists on your system:
 
+```
+command -v xsltproc
+```
+
+#### Set up environment
+
+```
 # Set up XML catalog file
 export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
 ```
 
-#### (Optional) Check the JATS dtd Version
 
-Run this command to display the modified date
-
-```
-wget http://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/ > dtd-tmp.html && cat dtd-tmp.html | grep "jats-archiving-dtd-1.0.zip" && rm dtd-tmp.html
-```
-
-If date modified is after "12-Oct-2012 08:36" then, replace the dtd/ (and submit an issue to [this repository](https://github.com/Klortho/JATS-to-Mediawiki/issues/new) to update it):
-
-```
-rm -rf dtd/*
-cd dtd
-wget ftp://ftp.ncbi.nlm.nih.gov/pub/jats/archiving/1.0/jats-archiving-dtd-1.0.zip
-unzip *.zip
-```
 
 #### Convert an Article
 The following are manual instructions for converting a single article, given its DOI.
