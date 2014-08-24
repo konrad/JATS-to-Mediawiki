@@ -302,20 +302,29 @@
     </xsl:template>
     
     <xsl:template match="strike">
-        <del><xsl:apply-templates/></del>
+      <xsl:text>&lt;del></xsl:text>
+      <xsl:apply-templates/>
+      <xsl:text>&lt;/del></xsl:text>
     </xsl:template>
     
     <xsl:template match="monospace">
-        <code><xsl:apply-templates/></code>
+        <xsl:text>&lt;code></xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&lt;/code></xsl:text>
     </xsl:template>
     
     <xsl:template match="preformat">
-        <pre><xsl:apply-templates/></pre>
+        <xsl:text>&lt;pre></xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&lt;/pre></xsl:text>
     </xsl:template>
     
     <xsl:template match="disp-quote">
-        <blockquote><xsl:apply-templates/></blockquote>
+        <xsl:text>&lt;blockquote></xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text>&lt;/blockquote></xsl:text>
     </xsl:template>
+  
     <xsl:template match="attrib">
         <br/><xsl:apply-templates/>
     </xsl:template>

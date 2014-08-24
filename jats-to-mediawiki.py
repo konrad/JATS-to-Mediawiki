@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import sys, os, traceback, re
 import argparse
 import requests
@@ -155,8 +157,9 @@ def main():
             print "\nConverting... "
             print nxmlfilepath
             fullnxmlfilepath = cwd + "/" + nxmlfilepath
-            xsltoutputfile = open(articlepmcid + ".xml.mw", 'w')
-            xsltcommand = call(['xsltproc', 'jats-to-mediawiki.xsl', fullnxmlfilepath], stdout=xsltoutputfile)
+            xsltoutputfile = open(articlepmcid + ".mw.xml", 'w')
+            xslt_file = os.path.abspath(os.path.dirname(__file__)) + '/' + 'jats-to-mediawiki.xsl'
+            xsltcommand = call(['xsltproc', xslt_file, fullnxmlfilepath], stdout=xsltoutputfile)
             print "\nReturning results..."
             if xsltcommand == 0:
                 print xsltoutputfile.name + "\n"
