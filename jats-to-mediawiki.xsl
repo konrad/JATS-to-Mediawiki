@@ -28,7 +28,8 @@
 
     <xsl:output method="xml" encoding="UTF-8" omit-xml-declaration="no" indent="yes"/>
     <xsl:strip-space elements="*"/>
-    
+    <xsl:preserve-space elements="named-content"/>
+  
     
     <!-- match and drop any elements intended for print only -->   
     <xsl:template match="*[@specific-use='print-only']"/>
@@ -48,7 +49,7 @@
             <xsl:element name="page">
                 <xsl:element name="title">
                     <!-- DEBUG: check for multiple article-title elements in dataset -->
-                    <xsl:value-of select="/article/front/article-meta/title-group/article-title"/>
+                    <xsl:apply-templates select="/article/front/article-meta/title-group/article-title"/>
                 </xsl:element>
                  
                 <!-- Value of 0 connotes a main article, see http://meta.wikimedia.org/wiki/Namespaces#List_of_namespaces -->
@@ -277,9 +278,44 @@
     <!-- ***FORMATTING*** -->
     <xsl:template match="italic">
         <xsl:text>''</xsl:text>
-        <xsl:apply-templates/>
+        <xsl:apply-templates mode='inline'/>
         <xsl:text>''</xsl:text>
     </xsl:template>    
+
+  <!-- 
+    Trying to fix #24.  Whitespace handling is a Hard Problem.  This hack attempts to identify
+    those elements that should be transformed in "inline" mode.  In this mode:
+    - text nodes are whitespace normalized, with the catch that whitespace-only nodes are
+      converted into single spaces
+    - the `inline` mode should get passed along to descendent nodes as processing continues.
+  -->
+  <xsl:template match='text()' mode='inline'>
+    <xsl:variable name="ns" select="normalize-space(.)"/>
+    <!-- Convert whitespace-only nodes into single spaces -->
+    <xsl:choose>
+      <xsl:when test="$ns = '' and $ns != .">
+        <xsl:text> </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$ns"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match='@*|*' mode='inline'>
+    <xsl:choose>
+      <xsl:when test='self::named-content'>
+        <xsl:apply-templates select='*|text()' mode='inline'/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select='.'/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+  
+  <xsl:template match='title' mode='inline'>
+    <xsl:apply-templates mode='inline'/>
+  </xsl:template>
 
     <xsl:template match="bold">
         <xsl:text>'''</xsl:text>
@@ -425,7 +461,7 @@
         <!-- newline for legibility -->
         <xsl:text>&#xA;</xsl:text>
         <xsl:call-template name="CreateHeadingTag"/>
-        <xsl:value-of select="title"/>
+        <xsl:apply-templates select="title" mode='inline'/>
         <xsl:call-template name="CreateHeadingTag"/>
         <!-- newline for legibility -->
         <xsl:text>&#xA;</xsl:text>
