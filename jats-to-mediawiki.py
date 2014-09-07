@@ -33,26 +33,29 @@ Main function
 def main():
     try:
 
-        # parse command line options
-        try:
-            # standard flags
-            parser = argparse.ArgumentParser(description='Command-line interface to jats-to-mediawiki.xslt, a script to manage conversion of articles (documents) from JATS xml format to MediaWiki markup, based on DOI or PMCID')
-            parser.add_argument('-t', '--tmpdir', default='tmp/', help='path to temporary directory for purposes of this script')
-            parser.add_argument('-x', '--xmlcatalogfiles',
-            default='dtd/catalog-test-jats-v1.xml', help='path to xml catalog files for xsltproc')
+        # standard flags
+        parser = argparse.ArgumentParser(description =
+            'Command-line interface to jats-to-mediawiki.xslt, a script to manage conversion ' +
+            'of articles (documents) from JATS xml format to MediaWiki markup, based on DOI or ' +
+            'PMCID')
+        parser.add_argument('-t', '--tmpdir', default='tmp/',
+            help='path to temporary directory for purposes of this script')
+        parser.add_argument('-x', '--xmlcatalogfiles',
+            default='dtd/catalog-test-jats-v1.xml',
+            help='path to xml catalog files for xsltproc')
 
-            # includes arbitrarily long list of keywords, or an input file
-            parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'), default=sys.stdin, help='path to input file', required=False)
-            parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'), default=sys.stdout, help='path to output file', required=False)
-            parser.add_argument('-a', '--articleids', nargs='+', default=None, help='an article ID or article IDs, either as DOIs or PMCIDs')
+        # includes arbitrarily long list of keywords, or an input file
+        parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'),
+            default=sys.stdin, help='path to input file', required=False)
+        parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'),
+            default=sys.stdout, help='path to output file', required=False)
+        parser.add_argument('-a', '--articleids', nargs='+', default=None,
+            help='an article ID or article IDs, either as DOIs or PMCIDs')
 
-            args = parser.parse_args()
+        args = parser.parse_args()
 
-#            print args #debug
+#        print args #debug
 
-        except:
-            print 'Unable to parse options, use the --help flag for usage information'
-            sys.exit(-1)
 
         # Handle and convert input values
         tmpdir = args.tmpdir
@@ -60,6 +63,7 @@ def main():
         infile = args.infile
         outfile = args.outfile
         articleids = []
+
         # add articleids if passed as option values
         if args.articleids:
             articleids.extend([to_unicode_or_bust(articleid) for articleid in args.articleids])
@@ -75,7 +79,8 @@ def main():
             if xmlcatalogfiles.startswith("/"):
                 os.environ["XML_CATALOG_FILES"] = xmlcatalogfiles
             else:
-                os.environ["XML_CATALOG_FILES"] = cwd + to_unicode_or_bust("/") + to_unicode_or_bust(xmlcatalogfiles)
+                os.environ["XML_CATALOG_FILES"] = (cwd + to_unicode_or_bust("/") +
+                    to_unicode_or_bust(xmlcatalogfiles))
         except:
             print 'Unable to set XML_CATALOG_FILES environment variable'
             sys.exit(-1)
@@ -102,7 +107,8 @@ def main():
 
             articledois = ",".join(articledois)
             idpayload = {'ids' : articledois, 'format' : 'json'}
-            idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/', params=idpayload)
+            idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/',
+                params=idpayload)
             print idconverter.text
             records = idconverter.json()['records']
             if records:
@@ -128,7 +134,8 @@ def main():
 
             # request archive file location
             archivefilepayload = {'id' : articlepmcid}
-            archivefilelocator = requests.get('http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi', params=archivefilepayload)
+            archivefilelocator = requests.get('http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi',
+                params=archivefilepayload)
             record = BeautifulSoup(archivefilelocator.content)
 
             # parse response for archive file location
@@ -171,6 +178,7 @@ def main():
         print "Killed script with keyboard interrupt, exiting..."
     except Exception:
         traceback.print_exc(file=sys.stdout)
+
     sys.exit(0)
 
 if __name__ == "__main__":
