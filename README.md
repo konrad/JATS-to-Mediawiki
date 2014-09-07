@@ -13,24 +13,22 @@ it to be tightly integrated with the [open-access-media-importer][5].
 
 [5]: http://en.wikiversity.org/wiki/User:OpenScientist/Open_grant_writing/Wissenswert_2011/Documentation
 
-## Usage
+For more documentation, see [the wiki](https://github.com/wpoa/JATS-to-Mediawiki/wiki).
 
-The following commands should work in a `bash` shell.
 
-### Clone this repository
-```
-git clone https://github.com/Klortho/JATS-to-Mediawiki.git
-cd JATS-to-Mediawiki
-```
+## Converting with the Python script
 
-### Usage Scripts
+The following examples assume you are working in a `bash` shell.
 
-Choose a wrapper script to use the JATS-to-Mediawiki conversion library:
+The jats-to-mediawiki.py python script provides a robust and human-friendly interface, including streaming
+using stdin, stdout, and stderr. Article IDs can be passed to the script as stdin,
+listed by line in an input file `-i`, or are as arguments to the `-a` or `--articles`
+flag.
 
-#### python
-This python script providess a robust and human-friendly interface, including streaming using stdin, stdout, and stderr. Article IDs can be passed to the script as stdin, listed by line in an input file `-i`, or are as arguments to the `-a` or `--articles` flag.
+### Setup
 
-##### Setup
+After cloning the repository to a new local copy, set up the Python run environment with
+the following commands:
 
 ```
 virtualenv env/
@@ -38,7 +36,14 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-##### Run
+Subsequently, when starting to work on the project in a new shell, you will need to
+source the environment's *activate* script:
+
+```
+source env/bin/activate
+```
+
+### Run
 
 For command line usage, use python or otherwise execute the script with a `--help` flag
 
@@ -46,36 +51,28 @@ For command line usage, use python or otherwise execute the script with a `--hel
 python jats-to-mediawiki.py --help
 ```
 
-#### bash
-[Incomplete] This is the beginning of a bash script to provide a minimal interface.
 
-`bash jats-to-mediawiki.sh`
+## Converting manually
 
-#### other scripts
-Fork this repository to add new scripts, then submit a 'pull request'.
-
-
-### Manual
-
-Depends on `xsltproc`.  To see if it exists on your system:
+The instructions below assume you'll use `xsltproc` to run the XSLT transformation.
+To see if it exists on your system:
 
 ```
 command -v xsltproc
 ```
 
-#### Set up environment
+### Set up environment
 
 ```
 # Set up XML catalog file
 export XML_CATALOG_FILES=`pwd`/dtd/catalog-test-jats-v1.xml
 ```
 
+### Convert an Article
 
-
-#### Convert an Article
 The following are manual instructions for converting a single article, given its DOI.
 
-First, you need to find the PMCID for the article.  If you have the DOI (for example,
+First, find the PMCID for the article.  If you have the DOI (for example,
 `10.1371/journal.pone.0010676`) the easiest way to do this is with the [PMC ID converter
 API](http://www.ncbi.nlm.nih.gov/pmc/tools/id-converter-api/).  Point your browser at
 [http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json](http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/?ids=10.1371/journal.pone.0010676&format=json),
@@ -105,10 +102,14 @@ Find the NXML file with `ls *.nxml`.  Now convert it with, for example
 xsltproc ../jats-to-mediawiki.xsl pone.0010676.nxml > PMC2873961.mw.xml
 ```
 
-In a browser, go to the `Special:Import` page of your target mediawiki installation, and import it.
+## Checking the result
+
+In a browser, go to the `Special:Import` page of your target mediawiki installation,
+and import it.
 
 You could use the scripts/fetch_samples.sh script to grab several examples
 articles, which were used in testing.
+
 
 ## Status
 
@@ -116,11 +117,11 @@ articles, which were used in testing.
 
 ## Documentation
 
-Is on our [Github wiki](https://github.com/Klortho/JATS-to-Mediawiki/wiki).
+Is on our [Github wiki](https://github.com/wpoa/JATS-to-Mediawiki/wiki).
 
 ## Bugs / issues
 
-We're using the [Github issue tracker](https://github.com/Klortho/JATS-to-Mediawiki/issues)
+We're using the [Github issue tracker](https://github.com/wpoa/JATS-to-Mediawiki/issues)
 for bug reports and to-do items.
 
 ## Contact / Collaborate
