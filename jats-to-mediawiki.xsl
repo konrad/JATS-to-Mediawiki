@@ -256,8 +256,8 @@
       <xsl:text>iss. </xsl:text>
       <xsl:value-of select="article-meta/isse[1]"/>
     </xsl:if>
-    <xsl:if
-      test="(journal-meta//journal-title | article-meta/volume | article-meta/issue) and (article-meta/fpage | article-meta/lpage | article-meta/page-range)">
+    <xsl:if test="( journal-meta//journal-title | article-meta/volume | article-meta/issue ) and 
+                  ( article-meta/fpage | article-meta/lpage | article-meta/page-range )">
       <xsl:text>, </xsl:text>
     </xsl:if>
     <xsl:choose>
@@ -884,53 +884,59 @@
   </xsl:template>
 
   <!--
-    Using Template:Citation ( http://en.wikipedia.org/wiki/Template:Citation )
-    which chooses formatting based on which field are populated; more reliable than attempting
-    to parse JATS/NLM attributes such as @publication-type or @citation-type, since any text 
-    value is permitted in those attributes. 
+    Using Template:Citation-wpoa ( http://en.wikipedia.org/wiki/Template:Citation-wpoa ),
+    which is, for the most part, a proxy of Tempate:Citation/core.
   -->
-  <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
+  <xsl:template match="citation | element-citation | mixed-citation | nlm-citation">
     <xsl:text>{{citation-wpoa&#xA;</xsl:text>
+
     <!-- fixme: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
-    <xsl:for-each select="string-name|person-group/string-name">
+    <xsl:for-each select="string-name | person-group/string-name">
       <xsl:text>| author</xsl:text>
       <xsl:value-of select="position()"/>
       <xsl:text> = </xsl:text>
       <xsl:apply-templates/>
     </xsl:for-each>
-    <xsl:for-each select="name|person-group/name">
-      <xsl:text>| last</xsl:text>
+
+    <xsl:for-each select="name | person-group/name">
+      <xsl:text>| Surname</xsl:text>
       <xsl:value-of select="position()"/>
       <xsl:text> = </xsl:text>
       <xsl:value-of select="surname"/>
       <xsl:text>&#xA;</xsl:text>
-      <xsl:text>| first</xsl:text>
+      <xsl:text>| Given</xsl:text>
       <xsl:value-of select="position()"/>
       <xsl:text> = </xsl:text>
       <xsl:value-of select="given-names"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:for-each>
+
+    <!-- FIXME:  what is this? "coauthors" is not among the Citation/core parameters. -->
     <xsl:for-each select="descendant::collab">
       <xsl:text>| coauthors = </xsl:text>
       <xsl:value-of select="."/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:for-each>
+
     <!-- PUBLICATION DATES : be careful not to get other dates that can appear in citations, which use same tags-->
-    <xsl:if test="year|date/year">
-      <xsl:text>| year = </xsl:text>
-      <xsl:value-of select="year|date/year"/>
+    <xsl:if test="year | date/year">
+      <xsl:text>| Year = </xsl:text>
+      <xsl:value-of select="year | date/year"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
-    <xsl:if test="month|date/month">
+
+    <xsl:if test="month | date/month">
       <xsl:text>| month = </xsl:text>
       <xsl:value-of select="month|date/month"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
+    
     <xsl:if test="string-date">
       <xsl:text>| date = </xsl:text>
       <xsl:value-of select="string-date"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
+    
     <!-- OTHER DATES -->
     <xsl:for-each
       select="date-in-citation[contains(@content-type, 'access|stamp')]|access-date|time-stamp">
@@ -943,15 +949,17 @@
       <xsl:value-of select="."/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:for-each>
+
     <!-- TITLE -->
     <xsl:choose>
       <!-- ARTICLE -->
       <xsl:when test="article-title">
-        <xsl:text>| title = </xsl:text>
+        <xsl:text>| Title = </xsl:text>
         <xsl:apply-templates select="article-title"/>
         <xsl:text>&#xA;</xsl:text>
+
         <xsl:if test="source">
-          <xsl:text>| journal = </xsl:text>
+          <xsl:text>| Periodical = </xsl:text>
           <xsl:apply-templates select="source"/>
           <xsl:text>&#xA;</xsl:text>
         </xsl:if>
@@ -982,12 +990,12 @@
 
     <!-- ISSUE -->
     <xsl:if test="issue">
-      <xsl:text>| issue = </xsl:text>
+      <xsl:text>| Issue = </xsl:text>
       <xsl:apply-templates select="issue"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
     <xsl:if test="volume">
-      <xsl:text>| volume = </xsl:text>
+      <xsl:text>| Volume = </xsl:text>
       <xsl:apply-templates select="volume"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
@@ -1032,24 +1040,24 @@
     <!-- PAGES -->
     <xsl:choose>
       <xsl:when test="page-range">
-        <xsl:text>| pages = </xsl:text>
+        <xsl:text>| At = </xsl:text>
         <xsl:apply-templates select="page-range"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="fpage and lpage">
-        <xsl:text>| pages = </xsl:text>
+        <xsl:text>| At = </xsl:text>
         <xsl:value-of select="fpage"/>
         <xsl:text>–</xsl:text>
         <xsl:value-of select="lpage"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="fpage and not(lpage)">
-        <xsl:text>| page = </xsl:text>
+        <xsl:text>| At = </xsl:text>
         <xsl:apply-templates select="fpage"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="elocation-id">
-        <xsl:text>| at = </xsl:text>
+        <xsl:text>| At = </xsl:text>
         <xsl:apply-templates select="elocation-id"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
@@ -1075,23 +1083,26 @@
       </xsl:when>
     </xsl:choose>
 
+
     <!-- IDENTIFIERS -->
+
     <xsl:if test="issn">
       <xsl:text>| issn = </xsl:text>
       <xsl:apply-templates select="issn"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
+
     <xsl:if test="isbn">
       <xsl:text>| isbn = </xsl:text>
       <xsl:apply-templates select="isbn"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
+    
     <xsl:choose>
       <xsl:when test="pub-id[@pub-id-type='doi']">
         <xsl:text>| doi = </xsl:text>
         <xsl:apply-templates select="pub-id[@pub-id-type='doi']"/>
         <xsl:text>&#xA;</xsl:text>
-
       </xsl:when>
       <xsl:when test="ext-link[@ext-link-type='doi']">
         <xsl:text>| doi = </xsl:text>
@@ -1102,12 +1113,12 @@
 
     <xsl:choose>
       <xsl:when test="pub-id[@pub-id-type='pmcid']">
-        <xsl:text>| pmc = </xsl:text>
+        <xsl:text>| PMC = </xsl:text>
         <xsl:apply-templates select="pub-id[@pub-id-type='pmcid']"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="ext-link[@ext-link-type='pmcid']">
-        <xsl:text>| pmc = </xsl:text>
+        <xsl:text>| PMC = </xsl:text>
         <xsl:apply-templates select="ext-link[@ext-link-type='pmcid']"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
@@ -1115,20 +1126,21 @@
 
     <xsl:choose>
       <xsl:when test="pub-id[@pub-id-type='pmid']">
-        <xsl:text>| pmid = </xsl:text>
+        <xsl:text>| PMID = </xsl:text>
         <xsl:apply-templates select="pub-id[@pub-id-type='pmid']"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="ext-link[@ext-link-type='pmid']">
-        <xsl:text>| pmid = </xsl:text>
+        <xsl:text>| PMID = </xsl:text>
         <xsl:apply-templates select="ext-link[@ext-link-type='pmid']"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
     </xsl:choose>
 
     <!-- default catch-all id -->
-    <xsl:if test="pub-id[not(@pub-id-type='doi|pmcid|pmid')]">
-      <xsl:text>| id = </xsl:text>
+    <xsl:if test="pub-id[not(@pub-id-type='doi' or @pub-id-type='pmcid' or
+                             @pub-id-type='pmid')]">
+      <xsl:text>| ID = </xsl:text>
       <xsl:apply-templates select="pub-id"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
