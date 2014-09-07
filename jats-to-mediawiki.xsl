@@ -1070,8 +1070,11 @@
         <xsl:apply-templates select="@xlink:href"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
+
       <!-- Avoid redundancy with specific ID fields below-->
-      <xsl:when test="ext-link[not(@ext-link-type='doi|pmcid|pmid')]">
+      <xsl:when test="ext-link[not(@ext-link-type='doi' or @ext-link-type='pmcid' or
+                                   @ext-link-type='pmid' or
+                                   starts-with(@xlink:href, 'http://dx.doi.org/'))]">
         <xsl:text>| url = </xsl:text>
         <xsl:apply-templates select="ext-link"/>
         <xsl:text>&#xA;</xsl:text>
@@ -1100,13 +1103,18 @@
     
     <xsl:choose>
       <xsl:when test="pub-id[@pub-id-type='doi']">
-        <xsl:text>| doi = </xsl:text>
+        <xsl:text>| DOI = </xsl:text>
         <xsl:apply-templates select="pub-id[@pub-id-type='doi']"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
       <xsl:when test="ext-link[@ext-link-type='doi']">
-        <xsl:text>| doi = </xsl:text>
+        <xsl:text>| DOI = </xsl:text>
         <xsl:apply-templates select="ext-link[@ext-link-type='doi']"/>
+        <xsl:text>&#xA;</xsl:text>
+      </xsl:when>
+      <xsl:when test="ext-link[starts-with(., 'http://dx.doi.org/')]">
+        <xsl:text>| DOI = </xsl:text>
+        <xsl:apply-templates select="ext-link[starts-with(@xlink:href, 'http://dx.doi.org/')]"/>
         <xsl:text>&#xA;</xsl:text>
       </xsl:when>
     </xsl:choose>
