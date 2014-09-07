@@ -126,9 +126,9 @@
     <!-- 
       Per Wikisource policy, all articles must begin with a populated header as defined in
       http://en.wikisource.org/wiki/Template:Header, which specifies that unused template parameters
-      should *NOT* be removed 
+      should *NOT* be removed.
     -->
-    <xsl:text>{{header&#xA;    | title      = </xsl:text>
+    <xsl:text>{{header-wpoa&#xA;    | title      = </xsl:text>
     <xsl:apply-templates select="article-meta/title-group/article-title[1]"/>
     <xsl:for-each select="article-meta/title-group/subtitle">
       <xsl:text>: </xsl:text>
@@ -890,7 +890,7 @@
     value is permitted in those attributes. 
   -->
   <xsl:template match="citation|element-citation|mixed-citation|nlm-citation">
-    <xsl:text>{{Citation&#xA;</xsl:text>
+    <xsl:text>{{citation-wpoa&#xA;</xsl:text>
     <!-- fixme: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
     <xsl:for-each select="string-name|person-group/string-name">
       <xsl:text>| author</xsl:text>
