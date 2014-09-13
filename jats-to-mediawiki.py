@@ -15,8 +15,8 @@ Helper functions
 '''
 
 # Unicode handling
-# (decode to unicode early, use unicode everywhere, encode late to string such as when
-# writing to disk or print)
+# (decode to unicode early, use unicode everywhere, encode late
+# to string such as when writing to disk or print)
 
 # Use this function to decode early
 def to_unicode_or_bust( obj, encoding='utf-8-sig'):
@@ -35,9 +35,9 @@ def main():
 
         # standard flags
         parser = argparse.ArgumentParser(description =
-            'Command-line interface to jats-to-mediawiki.xslt, a script to manage conversion ' +
-            'of articles (documents) from JATS xml format to MediaWiki markup, based on DOI or ' +
-            'PMCID')
+            'Command-line interface to jats-to-mediawiki.xslt, a script to ' +
+            'manage conversion of articles (documents) from JATS xml format ' +
+            'to MediaWiki markup, based on DOI or PMCID')
         parser.add_argument('-t', '--tmpdir', default='tmp/',
             help='path to temporary directory for purposes of this script')
         parser.add_argument('-x', '--xmlcatalogfiles',
@@ -45,11 +45,14 @@ def main():
             help='path to xml catalog files for xsltproc')
 
         # includes arbitrarily long list of keywords, or an input file
-        parser.add_argument('-i', '--infile', nargs='?', type=argparse.FileType('r'),
-            default=sys.stdin, help='path to input file', required=False)
-        parser.add_argument('-o', '--outfile', nargs='?', type=argparse.FileType('w'),
-            default=sys.stdout, help='path to output file', required=False)
-        parser.add_argument('-a', '--articleids', nargs='+', default=None,
+        parser.add_argument('-i', '--infile', nargs='?',
+            type=argparse.FileType('r'),default=sys.stdin,
+            help='path to input file', required=False)
+        parser.add_argument('-o', '--outfile', nargs='?',
+            type=argparse.FileType('w'), default=sys.stdout,
+            help='path to output file', required=False)
+        parser.add_argument('-a', '--articleids', nargs='+',
+            default=None,
             help='an article ID or article IDs, either as DOIs or PMCIDs')
 
         args = parser.parse_args()
@@ -66,10 +69,12 @@ def main():
 
         # add articleids if passed as option values
         if args.articleids:
-            articleids.extend([to_unicode_or_bust(articleid) for articleid in args.articleids])
+            articleids.extend([to_unicode_or_bust(articleid)
+                               for articleid in args.articleids])
         # add articleids from file or STDIN
         if not sys.stdin.isatty() or infile.name != "<stdin>":
-            articleids.extend([to_unicode_or_bust(line.strip()) for line in infile.readlines()])
+            articleids.extend([to_unicode_or_bust(line.strip())
+                               for line in infile.readlines()])
         # De-duplicate by converting to set (unique) then back to list again
         articleids = list(set(articleids))
 
@@ -79,8 +84,9 @@ def main():
             if xmlcatalogfiles.startswith("/"):
                 os.environ["XML_CATALOG_FILES"] = xmlcatalogfiles
             else:
-                os.environ["XML_CATALOG_FILES"] = (cwd + to_unicode_or_bust("/") +
-                    to_unicode_or_bust(xmlcatalogfiles))
+                os.environ["XML_CATALOG_FILES"] = (cwd +
+                    to_unicode_or_bust("/") +
+                    to_unicode_or_bust(xmlcatalogfiles) )
         except:
             print 'Unable to set XML_CATALOG_FILES environment variable'
             sys.exit(-1)
@@ -107,7 +113,8 @@ def main():
 
             articledois = ",".join(articledois)
             idpayload = {'ids' : articledois, 'format' : 'json'}
-            idconverter = requests.get('http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/',
+            idconverter = requests.get(
+                'http://www.pubmedcentral.nih.gov/utils/idconv/v1.0/',
                 params=idpayload)
             print idconverter.text
             records = idconverter.json()['records']
@@ -134,12 +141,14 @@ def main():
 
             # request archive file location
             archivefilepayload = {'id' : articlepmcid}
-            archivefilelocator = requests.get('http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi',
+            archivefilelocator = requests.get(
+                'http://www.pubmedcentral.nih.gov/utils/oa/oa.fcgi',
                 params=archivefilepayload)
             record = BeautifulSoup(archivefilelocator.content)
 
             # parse response for archive file location
-            archivefileurl = record.oa.records.record.find(format='tgz')['href']
+            archivefileurl = record.oa.records.record.find(
+                format='tgz')['href']
 
             # download the file
             print "\nDownloading file..."
@@ -151,7 +160,8 @@ def main():
 #            archivefile = wget.download(archivefileurl, wget.bar_thermometer)
 
             # open the archive
-            archivedirectoryname, archivefileextension = archivefilename.split('.tar.gz')
+            archivedirectoryname, archivefileextension = archivefilename.split(
+                '.tar.gz')
             print archivedirectoryname
             tfile = tarfile.open(archivefilename, 'r:gz')
             tfile.extractall('.')
@@ -165,8 +175,11 @@ def main():
             print nxmlfilepath
             fullnxmlfilepath = cwd + "/" + nxmlfilepath
             xsltoutputfile = open(articlepmcid + ".mw.xml", 'w')
-            xslt_file = os.path.abspath(os.path.dirname(__file__)) + '/' + 'jats-to-mediawiki.xsl'
-            xsltcommand = call(['xsltproc', xslt_file, fullnxmlfilepath], stdout=xsltoutputfile)
+            xslt_file = os.path.abspath(
+                os.path.dirname(__file__)) + '/' + 'jats-to-mediawiki.xsl'
+            xsltcommand = call(
+                ['xsltproc', xslt_file, fullnxmlfilepath],
+                stdout=xsltoutputfile)
             print "\nReturning results..."
             if xsltcommand == 0:
                 print xsltoutputfile.name + "\n"
