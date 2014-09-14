@@ -38,8 +38,8 @@ def main():
             'Command-line interface to jats-to-mediawiki.xslt, a script to ' +
             'manage conversion of articles (documents) from JATS xml format ' +
             'to MediaWiki markup, based on DOI or PMCID')
-        parser.add_argument('-t', '--tmpdir', default='tmp/',
-            help='path to temporary directory for purposes of this script')
+        parser.add_argument('-d', '--destination', default='articles/',
+            help='path to destination directory for purposes of this script')
         parser.add_argument('-x', '--xmlcatalogfiles',
             default='dtd/catalog-test-jats-v1.xml',
             help='path to xml catalog files for xsltproc')
@@ -61,7 +61,7 @@ def main():
 
 
         # Handle and convert input values
-        tmpdir = args.tmpdir
+        destination = args.destination
         xmlcatalogfiles = args.xmlcatalogfiles
         infile = args.infile
         outfile = args.outfile
@@ -90,16 +90,16 @@ def main():
         except:
             print 'Unable to set XML_CATALOG_FILES environment variable'
             sys.exit(-1)
+        # print "\n" + os.environ.get('XML_CATALOG_FILES') + "\n" #debug
 
-        # create temporary directory for zips
-        tmpdir = cwd + "/" + to_unicode_or_bust(tmpdir)
+        # create destination directory
+        destination = cwd + "/" + to_unicode_or_bust(destination)
         try:
-            if not os.path.exists(tmpdir):
-                os.makedirs(tmpdir)
+            if not os.path.exists(destination):
+                os.makedirs(destination)
         except:
             print 'Unable to find or create temporary directory'
             sys.exit(-1)
-        # print "\n" + os.environ.get('XML_CATALOG_FILES') + "\n" #debug
 
         # separate DOIs and PMCIDs
         articledois = [i for i in articleids if re.match('^10*', i)]
@@ -151,34 +151,40 @@ def main():
                 format='tgz')['href']
 
             # download the file
-            print "\nDownloading file..."
             archivefilename = wget.filename_from_url(archivefileurl)
-            urllib.urlretrieve(archivefileurl, archivefilename)
 
-             # @TODO For some reason, wget hangs and doesn't finish, using
-             # urllib.urlretrieve() instead for this for now.
-#            archivefile = wget.download(archivefileurl, wget.bar_thermometer)
+            if not os.path.exists(destination + archivefilename):
+                urllib.urlretrieve(archivefileurl, destination + archivefilename)
+                print "\nDownloading file..."
+            else:
+                print "\nFound local file, skipping download..."
+
+                # @TODO For some reason, wget hangs and doesn't finish, using
+                # urllib.urlretrieve() instead for this for now.
+#               archivefile = wget.download(archivefileurl, wget.bar_thermometer)
 
             # open the archive
             archivedirectoryname, archivefileextension = archivefilename.split(
                 '.tar.gz')
-            print archivedirectoryname
-            tfile = tarfile.open(archivefilename, 'r:gz')
-            tfile.extractall('.')
 
+            if not os.path.exists(destination + archivedirectoryname):
+                print "\nExtracting " + archivedirectoryname + " ..."
+                tfile = tarfile.open(destination + archivefilename, 'r:gz')
+                tfile.extractall(destination)
+            else:
+                print "\nFound local directory, skipping extraction..."
 
             # run xsltproc
             # @TODO use list comprehension instead
-            for n in glob.glob(archivedirectoryname + "/*.nxml"):
+            for n in glob.glob(destination + archivedirectoryname + "/*.nxml"):
                 nxmlfilepath = n
             print "\nConverting... "
             print nxmlfilepath
-            fullnxmlfilepath = cwd + "/" + nxmlfilepath
-            xsltoutputfile = open(articlepmcid + ".mw.xml", 'w')
+            xsltoutputfile = open(destination + articlepmcid + ".mw.xml", 'w')
             xslt_file = os.path.abspath(
                 os.path.dirname(__file__)) + '/' + 'jats-to-mediawiki.xsl'
             xsltcommand = call(
-                ['xsltproc', xslt_file, fullnxmlfilepath],
+                ['xsltproc', xslt_file, nxmlfilepath],
                 stdout=xsltoutputfile)
             print "\nReturning results..."
             if xsltcommand == 0:
