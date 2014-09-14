@@ -153,8 +153,8 @@ def main():
             # download the file
             archivefilename = wget.filename_from_url(archivefileurl)
 
-            if not os.path.exists(archivefilename):
-                urllib.urlretrieve(archivefileurl, archivefilename)
+            if not os.path.exists(destination + archivefilename):
+                urllib.urlretrieve(archivefileurl, destination + archivefilename)
                 print "\nDownloading file..."
             else:
                 print "\nFound local file, skipping download..."
@@ -167,25 +167,24 @@ def main():
             archivedirectoryname, archivefileextension = archivefilename.split(
                 '.tar.gz')
 
-            if not os.path.exists(archivedirectoryname):
+            if not os.path.exists(destination + archivedirectoryname):
                 print "\nExtracting " + archivedirectoryname + " ..."
-                tfile = tarfile.open(archivefilename, 'r:gz')
-                tfile.extractall('.')
+                tfile = tarfile.open(destination + archivefilename, 'r:gz')
+                tfile.extractall(destination)
             else:
                 print "\nFound local directory, skipping extraction..."
 
             # run xsltproc
             # @TODO use list comprehension instead
-            for n in glob.glob(archivedirectoryname + "/*.nxml"):
+            for n in glob.glob(destination + archivedirectoryname + "/*.nxml"):
                 nxmlfilepath = n
             print "\nConverting... "
             print nxmlfilepath
-            fullnxmlfilepath = cwd + "/" + nxmlfilepath
-            xsltoutputfile = open(articlepmcid + ".mw.xml", 'w')
+            xsltoutputfile = open(destination + articlepmcid + ".mw.xml", 'w')
             xslt_file = os.path.abspath(
                 os.path.dirname(__file__)) + '/' + 'jats-to-mediawiki.xsl'
             xsltcommand = call(
-                ['xsltproc', xslt_file, fullnxmlfilepath],
+                ['xsltproc', xslt_file, nxmlfilepath],
                 stdout=xsltoutputfile)
             print "\nReturning results..."
             if xsltcommand == 0:
