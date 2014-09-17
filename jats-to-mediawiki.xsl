@@ -1222,12 +1222,16 @@
           >CC-by-3.0-us</xsl:when>
         <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/3.0')"
           >Cc-by-3.0</xsl:when>
-        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0/us/')"
-          >CC-by-sa-3.0-us</xsl:when>
-        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0')"
-          >CC-BY-SA-3.0</xsl:when>
+        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/4.0')"
+          >CC-BY-4.0</xsl:when>
         <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/2.0')"
           >CC-BY-SA-2.0</xsl:when>
+        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0')"
+          >CC-BY-SA-3.0</xsl:when>
+        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/3.0/us/')"
+          >CC-by-sa-3.0-us</xsl:when>
+        <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by-sa/4.0')"
+          >CC-BY-SA-4.0</xsl:when>
       </xsl:choose>
       <xsl:text>}}</xsl:text>
     </xsl:if>
