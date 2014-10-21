@@ -617,7 +617,7 @@
         <xsl:text>|frameless</xsl:text>
       </xsl:when>
       <xsl:when test="name(..)='disp-formula'">
-        <xsl:text>|frameless|left</xsl:text>
+        <xsl:text>|none</xsl:text> <!-- keeps image in original size; adds text in new line below image -->
       </xsl:when>
       <xsl:otherwise>
         <!-- in JATS 0.4, default value of position is 'float' -->
@@ -670,14 +670,6 @@
       </xsl:when>
     </xsl:choose>
     <xsl:text>]]</xsl:text>
-
-    <!-- adds line break for disp-formula tags only ;) -->
-    <xsl:choose>
-      <xsl:when test="name(..)='disp-formula'">
-        <!-- clear works better here than either line break:  &#xA; or <br> -->
-        <xsl:text>&lt;div style="clear: both;"&gt;&lt;/div&gt;</xsl:text>
-      </xsl:when>
-    </xsl:choose>
 
   </xsl:template>
 
