@@ -674,7 +674,8 @@
     <!-- adds line break for disp-formula tags only ;) -->
     <xsl:choose>
       <xsl:when test="name(..)='disp-formula'">
-        <xsl:text>&#xA;&#xA;</xsl:text>
+        <!-- clear works better here than either line break:  &#xA; or <br> -->
+        <xsl:text>&lt;div style="clear: both;"&gt;&lt;/div&gt;</xsl:text>
       </xsl:when>
     </xsl:choose>
 
