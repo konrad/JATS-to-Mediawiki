@@ -613,8 +613,11 @@
       <xsl:when test="position='anchor'">
         <xsl:text>|frame</xsl:text>
       </xsl:when>
-      <xsl:when test="name()='inline-graphic'">
+      <xsl:when test="name()='inline-graphic'"> <!-- also matches on inline equations -->
         <xsl:text>|frameless</xsl:text>
+      </xsl:when>
+      <xsl:when test="name(..)='disp-formula'">
+        <xsl:text>|frameless|left</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <!-- in JATS 0.4, default value of position is 'float' -->
@@ -667,6 +670,14 @@
       </xsl:when>
     </xsl:choose>
     <xsl:text>]]</xsl:text>
+
+    <!-- adds line break for disp-formula tags only ;) -->
+    <xsl:choose>
+      <xsl:when test="name(..)='disp-formula'">
+        <xsl:text>&amp;#xA;</xsl:text> <!-- character code for <br/> tag -->
+      </xsl:when>
+    </xsl:choose>
+
   </xsl:template>
 
 
