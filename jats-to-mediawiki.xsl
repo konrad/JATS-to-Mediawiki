@@ -674,7 +674,7 @@
     <!-- adds line break for disp-formula tags only ;) -->
     <xsl:choose>
       <xsl:when test="name(..)='disp-formula'">
-        <xsl:text>&amp;#xA;</xsl:text> <!-- character code for <br/> tag -->
+        <xsl:text>&lt;br/&gt;</xsl:text>
       </xsl:when>
     </xsl:choose>
 
