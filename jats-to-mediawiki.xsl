@@ -9,6 +9,7 @@
                 extension-element-prefixes="ex str" version="1.0">
 
   <xsl:import href="serialize.xsl"/>
+  
 
   <!-- 
     Output: targeting schema:http://www.mediawiki.org/xml/export-0.8.xsd
@@ -101,7 +102,11 @@
             <!-- reference list should come last -->
             <xsl:apply-templates select="back/*[not(self::ref-list)]"/>
             <xsl:apply-templates select="back/ref-list"/>
-            <xsl:apply-templates select="front/article-meta//license"/>
+            <!--
+              Comment this out for now; see issue #18 at recitation bot,
+              https://github.com/wpoa/recitation-bot/issues/18
+              <xsl:apply-templates select="front/article-meta//license"/>
+            -->
           </xsl:element>
 
           <!-- Not clear what exactly to checksum, so leaving blank -->
@@ -1189,13 +1194,17 @@
   </xsl:template>
 
 
-  <xsl:template match="license">
-    <!-- We need controlled vocabulary to match a license description in the article markup
+<!--  
+    Commenting this out for now, because the OAMI does a better job of capturing license information.
+    See https://github.com/wpoa/recitation-bot/issues/18.
+    
+    <xsl:template match="license">
+    <!-\- We need controlled vocabulary to match a license description in the article markup
             with the appropriate license template in WikiSource.  For this purpose, we'll examine the 
-            <license> element for a URI, however, NLM/JATS are quite flexible in how this is encoded. -->
+            <license> element for a URI, however, NLM/JATS are quite flexible in how this is encoded. -\->
     <xsl:variable name="licenseURI">
       <xsl:choose>
-        <!-- order these by reliability -->
+        <!-\- order these by reliability -\->
         <xsl:when test="@xlink:href">
           <xsl:value-of select="@xlink:href"/>
         </xsl:when>
@@ -1213,8 +1222,8 @@
     
     <xsl:if test="$licenseURI">
       <xsl:text>&#xA;{{</xsl:text>
-      <!-- attempt to match the URI to an appropriate template -->
-      <!-- FIXME:  why do the outputs of these differ by case? -->
+      <!-\- attempt to match the URI to an appropriate template -\->
+      <!-\- FIXME:  why do the outputs of these differ by case? -\->
       <xsl:choose>
         <xsl:when test="contains($licenseURI, 'creativecommons.org/licenses/by/2.0')"
           >CC-BY-2.0</xsl:when>
@@ -1240,7 +1249,10 @@
       <xsl:text>}}</xsl:text>
     </xsl:if>
   </xsl:template>
-
+-->
+  
+  
+  
   <!-- Fix #12 - special cases with brackets around xrefs.  They must be removed. -->
   <xsl:template priority="2"
     match='text()[substring(., 1, 1) = "]" and 
