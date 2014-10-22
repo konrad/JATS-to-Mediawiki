@@ -897,10 +897,7 @@
     which is, for the most part, a proxy of Tempate:Citation/core.
   -->
   <xsl:template match="citation | element-citation | mixed-citation | nlm-citation">
-    <!-- Attempts to handle fringe case of citation with very nearly no markup! Just pass the text along! -->
-    <xsl:if test="@publication-type = 'other'">
-      <xsl:value-of select="."/>
-    </xsl:if>
+    <!-- @TODO if there is some way to know when a citation is missing markup, then pass plain text here -->
     <xsl:text>{{citation-wpoa&#xA;</xsl:text>
 
     <!-- fixme: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
