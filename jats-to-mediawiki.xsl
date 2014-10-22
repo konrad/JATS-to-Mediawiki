@@ -892,6 +892,10 @@
     which is, for the most part, a proxy of Tempate:Citation/core.
   -->
   <xsl:template match="citation | element-citation | mixed-citation | nlm-citation">
+    <!-- Attempts to handle fringe case of citation with very nearly no markup! Just pass the text along! -->
+    <xsl:if test="@publication-type = 'other'">
+      <xsl:value-of select="."/>
+    </xsl:if>
     <xsl:text>{{citation-wpoa&#xA;</xsl:text>
 
     <!-- fixme: attempt to differentiate editors from authors?  JATS/NLM tagset is not reliable for this -->
@@ -1104,7 +1108,7 @@
       <xsl:apply-templates select="isbn"/>
       <xsl:text>&#xA;</xsl:text>
     </xsl:if>
-    
+
     <xsl:choose>
       <xsl:when test="pub-id[@pub-id-type='doi']">
         <xsl:text>| DOI = </xsl:text>
