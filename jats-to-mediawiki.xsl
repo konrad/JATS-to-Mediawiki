@@ -6,7 +6,7 @@
     extension-element-prefixes="ex"
     version="1.0">
 
-    <xsl:import href="lib/serialize.xsl"/>
+    <xsl:import href="serialize.xsl"/>
   
     <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.8.xsd
          For article content, targeting features listed on, or linked to from, x -->
