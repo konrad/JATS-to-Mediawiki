@@ -255,11 +255,11 @@
         </xsl:choose>
     </xsl:template>
 
-
+<!-- need linebreak before tag TC -->
     <xsl:template match="abstract">
+        <xsl:text>&#10;</xsl:text>
         <xsl:text>==Abstract==</xsl:text>
-        <xsl:text>
-</xsl:text>
+        <xsl:text>&#10;</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
