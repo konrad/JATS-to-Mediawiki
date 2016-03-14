@@ -278,14 +278,13 @@
         <xsl:apply-templates/>
     </xsl:template>
 
-    <xsl:template match="sec/p">
+    <xsl:template match="sec/p | body/p">
         <!-- newline for legibility
           [CFM] Also, need an extra newline between paragraphs in wiki markup.          
         -->
-        <xsl:text>
-
-</xsl:text>
+        <xsl:text>&#10;</xsl:text>
         <xsl:apply-templates/>
+        <xsl:text>&#10;</xsl:text>
     </xsl:template>
 
     
