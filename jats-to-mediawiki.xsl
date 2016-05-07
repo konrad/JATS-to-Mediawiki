@@ -266,6 +266,7 @@
     <xsl:template match="body">
             <xsl:apply-templates select="p"/>
             <xsl:apply-templates select="sec"/>
+            <xsl:apply-templates select="boxed-text"/>
     <!--    TODO: look into what this is    
             <xsl:apply-templates select="sig-block"/>
     -->    
@@ -1066,7 +1067,6 @@
 }}
 </xsl:text>
     </xsl:template>
-
     
     <xsl:template match="license">
         <!-- We need controlled vocabulary to match a license description in the article markup
@@ -1111,6 +1111,18 @@
 
 
     <!-- TODO: Notes section -->
+
+<!-- boxed-text -->
+    
+    <xsl:template match="boxed-text">
+        <xsl:text>&#xA;{| class="wikitable"&#xA;|-</xsl:text>
+        <xsl:text>&#xA;! </xsl:text>
+        <xsl:apply-templates select="sec/title/text()"/>
+        <xsl:text>&#xA;| </xsl:text>
+        <xsl:apply-templates select="sec/*[not(local-name() = 'title')]"/>
+        <xsl:text>&#xA;|}&#xA;</xsl:text>
+    </xsl:template>
+
 
 </xsl:stylesheet>
 
