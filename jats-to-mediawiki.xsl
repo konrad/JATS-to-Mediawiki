@@ -1116,7 +1116,7 @@
     
     <xsl:template match="boxed-text">
         <xsl:text>&#xA;{| class="wikitable"&#xA;|-</xsl:text>
-        <xsl:text>&#xA;!</xsl:text>
+        <xsl:text>&#xA;! </xsl:text>
         <xsl:apply-templates select="sec/title/text()"/>
         <xsl:text>&#xA;| </xsl:text>
         <xsl:apply-templates select="sec/*[not(local-name() = 'title')]"/>
