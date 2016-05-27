@@ -688,9 +688,7 @@
         <xsl:choose>
             <xsl:when test="//ref[@id=$rid]">
                 <!-- escaping xml tags -->
-                <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$rid"/><xsl:text>"&gt;</xsl:text>
-                <xsl:apply-templates/>
-                <xsl:text>&lt;/ref&gt;</xsl:text>
+                <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$rid"/><xsl:text>"/&gt;</xsl:text>
             </xsl:when>
             <!-- Internal links to tables -->
             <xsl:when test="//table[@id=$rid]|//table-wrap[@id=$rid]">
