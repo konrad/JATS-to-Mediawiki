@@ -735,11 +735,13 @@
         </xsl:choose>
         <xsl:text> ==
 </xsl:text>
+        <xsl:apply-templates select="ref"/>
 <!--        <xsl:text>&lt;references&gt;</xsl:text>
             <xsl:apply-templates/>
         <xsl:text>&lt;/references&gt;</xsl:text>
--->    <references/>
-        <xsl:apply-templates/>
+   <references/>
+        <xsl:apply-templates />
+        --> 
     </xsl:template>
     
     <xsl:template match="ref">
