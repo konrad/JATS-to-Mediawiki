@@ -1,13 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="17.0">
+<project version="18.0">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="17.0" xml:space="preserve">
+            <serialized version="18.0" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
                         <String>scenario.associations</String>
                         <scenarioAssociation-array>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>scripts/samples/PMC2467486/pone.0002804.mw.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>jats-to-mediawiki</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>scripts/samples/PMC2467486/pone.0002804.nxml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>jats-to-mediawiki</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
                                     <String>../../../../../home/thc4/working/Github/JATS-to-Mediawiki/test_files/pbio_1001210_jats.xml</String>
