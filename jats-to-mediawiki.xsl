@@ -6,7 +6,7 @@
     extension-element-prefixes="ex"
     version="1.0">
 
-    <xsl:import href="lib/serialize.xsl"/>
+    <xsl:import href="serialize.xsl"/>
   
     <!-- Output: targeting schema:http://www.mediawiki.org/xml/export-0.8.xsd
          For article content, targeting features listed on, or linked to from, x -->
@@ -36,7 +36,7 @@
         
         <!-- Start MediaWiki document -->
         <xsl:element  name="mediawiki">
-            <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.8/</xsl:attribute>
+  <!--          <xsl:attribute name="xmlns">http://www.mediawiki.org/xml/export-0.8/</xsl:attribute> -->
             <xsl:attribute name="xsi:schemaLocation">http://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd</xsl:attribute>
             <xsl:attribute name="version">0.8</xsl:attribute>
             <xsl:attribute name="xml:lang"><xsl:value-of select="/article/@xml:lang"/></xsl:attribute>
@@ -255,17 +255,18 @@
         </xsl:choose>
     </xsl:template>
 
-
+<!-- need linebreak before tag TC -->
     <xsl:template match="abstract">
+        <xsl:text>&#10;</xsl:text>
         <xsl:text>==Abstract==</xsl:text>
-        <xsl:text>
-</xsl:text>
+        <xsl:text>&#10;</xsl:text>
         <xsl:apply-templates/>
     </xsl:template>
 
     <xsl:template match="body">
             <xsl:apply-templates select="p"/>
             <xsl:apply-templates select="sec"/>
+            <xsl:apply-templates select="boxed-text"/>
     <!--    TODO: look into what this is    
             <xsl:apply-templates select="sig-block"/>
     -->    
@@ -278,14 +279,13 @@
         <xsl:apply-templates/>
     </xsl:template>
 
-    <xsl:template match="sec/p">
+    <xsl:template match="sec/p | body/p">
         <!-- newline for legibility
           [CFM] Also, need an extra newline between paragraphs in wiki markup.          
         -->
-        <xsl:text>
-
-</xsl:text>
+        <xsl:text>&#10;</xsl:text>
         <xsl:apply-templates/>
+        <xsl:text>&#10;</xsl:text>
     </xsl:template>
 
     
@@ -688,9 +688,8 @@
         <xsl:choose>
             <xsl:when test="//ref[@id=$rid]">
                 <!-- escaping xml tags -->
-                <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$rid"/><xsl:text>"&gt;</xsl:text>
-                <xsl:apply-templates/>
-                <xsl:text>&lt;/ref&gt;</xsl:text>
+<!--                <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$rid"/><xsl:text>"/&gt;</xsl:text> -->
+                <ref name="{$rid}"/>
             </xsl:when>
             <!-- Internal links to tables -->
             <xsl:when test="//table[@id=$rid]|//table-wrap[@id=$rid]">
@@ -736,9 +735,13 @@
         </xsl:choose>
         <xsl:text> ==
 </xsl:text>
-        <xsl:text>&lt;references&gt;</xsl:text>
+        <xsl:apply-templates select="ref"/>
+<!--        <xsl:text>&lt;references&gt;</xsl:text>
             <xsl:apply-templates/>
         <xsl:text>&lt;/references&gt;</xsl:text>
+   <references/>
+        <xsl:apply-templates />
+        --> 
     </xsl:template>
     
     <xsl:template match="ref">
@@ -757,11 +760,14 @@
         <!-- QUESTION: better to let the error display, or suppress and fail quietly? -->
         <!-- Test that there's a link to this footnote; if not, Wiki will display an error, so don't bother. -->
         <xsl:if test="//xref[@rid=$refID]">
-            <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$refID"/><xsl:text>"&gt;</xsl:text>
+<!--            <xsl:text>&lt;ref name="</xsl:text><xsl:value-of select="$refID"/><xsl:text>"&gt;</xsl:text>
                 <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
                 <xsl:text>&lt;/ref&gt;</xsl:text>
-            <xsl:text> <!-- newline -->
-</xsl:text>
+            <xsl:text>--> <!-- newline -->
+<!--</xsl:text> -->
+            <ref name="{$refID}">
+                <xsl:apply-templates select="citation|element-citation|mixed-citation|nlm-citation"/>
+            </ref>
         </xsl:if>   
     </xsl:template>
     
@@ -1067,7 +1073,6 @@
 }}
 </xsl:text>
     </xsl:template>
-
     
     <xsl:template match="license">
         <!-- We need controlled vocabulary to match a license description in the article markup
@@ -1112,6 +1117,18 @@
 
 
     <!-- TODO: Notes section -->
+
+<!-- boxed-text -->
+    
+    <xsl:template match="boxed-text">
+        <xsl:text>&#xA;{| class="wikitable"&#xA;|-</xsl:text>
+        <xsl:text>&#xA;! </xsl:text>
+        <xsl:apply-templates select="sec/title/text()"/>
+        <xsl:text>&#xA;| </xsl:text>
+        <xsl:apply-templates select="sec/*[not(local-name() = 'title')]"/>
+        <xsl:text>&#xA;|}&#xA;</xsl:text>
+    </xsl:template>
+
 
 </xsl:stylesheet>
 
